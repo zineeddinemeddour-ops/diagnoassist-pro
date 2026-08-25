@@ -2,9 +2,7 @@
   "name": "diagnoassist-pro",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "build": "next build"
-  },
+  "scripts": { "build": "next build" },
   "dependencies": {
     "next": "16.2.6",
     "react": "19.2.6",
@@ -18,7 +16,5 @@
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3"
   },
-  "engines": {
-    "node": ">=22.13.0"
-  }
+  "engines": { "node": ">=22.13.0" }
 }

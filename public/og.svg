@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">DiagnoAssist</title><desc id="desc">Clarity for every clinical decision.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071b2d"/><stop offset="1" stop-color="#123b4b"/></linearGradient><linearGradient id="mark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#39d7bd"/><stop offset="1" stop-color="#88ead7"/></linearGradient></defs>
+  <rect width="1200" height="630" fill="url(#bg)"/><circle cx="1045" cy="90" r="220" fill="#1c6470" opacity=".3"/><circle cx="90" cy="590" r="260" fill="#0d4c59" opacity=".4"/>
+  <g transform="translate(100 110)"><rect width="92" height="92" rx="28" fill="url(#mark)"/><path d="M29 48h13l7-20 12 40 8-20h14" fill="none" stroke="#071b2d" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <text x="100" y="300" fill="#f4fbf9" font-family="Arial, sans-serif" font-size="92" font-weight="800">DiagnoAssist</text>
+  <text x="100" y="382" fill="#a9c8c7" font-family="Arial, sans-serif" font-size="38">Clarity for every clinical decision.</text>
+  <rect x="100" y="445" width="335" height="4" rx="2" fill="#39d7bd"/>
+  <text x="100" y="510" fill="#d9ebe8" font-family="Arial, sans-serif" font-size="27">Assessment · Differential diagnosis · Follow-up</text>
+</svg>
