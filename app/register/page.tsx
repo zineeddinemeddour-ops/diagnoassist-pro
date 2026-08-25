@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowIcon, Brand, CheckIcon, Field, SafetyNote } from "../components";
+import { DemoForm } from "../demo-forms";
 
 export const metadata: Metadata = { title: "إنشاء حساب | DiagnoAssist", description: "إنشاء مساحة عمل تجريبية على DiagnoAssist." };
 
@@ -13,7 +14,7 @@ export default function RegisterPage() {
       </section>
       <section className="auth-panel">
         <a className="back-link" href="../">العودة إلى الموقع</a>
-        <form className="auth-card register-card" action="../pricing/" method="get">
+        <DemoForm className="auth-card register-card" destination="../pricing/">
           <div className="auth-card-heading"><span className="auth-icon">+</span><small>حساب جديد</small><h2>أنشئ مساحة عملك</h2><p>بيانات أساسية فقط للانتقال إلى اختيار الباقة.</p></div>
           <div className="form-grid two"><Field label="الاسم المهني" name="name" placeholder="الاسم المعروض" required /><Field label="البريد الإلكتروني" name="email" type="email" placeholder="name@clinic.com" required /></div>
           <div className="form-grid two"><Field label="اسم المستخدم" name="username" placeholder="clinic.name" required /><label className="form-field"><span>التخصص *</span><select name="specialty" required defaultValue=""><option value="" disabled>اختر التخصص</option><option>أخصائي نفساني</option><option>طبيب نفسي</option><option>أخصائي اجتماعي</option><option>مقيم في علم النفس</option></select></label></div>
@@ -21,7 +22,7 @@ export default function RegisterPage() {
           <button className="button button-primary auth-submit" type="submit">متابعة إلى الباقات <ArrowIcon /></button>
           <SafetyNote>لا يتم إنشاء حساب حقيقي في هذا النموذج الاستعراضي، ولا تُحفظ البيانات.</SafetyNote>
           <p className="auth-switch">لديك حساب بالفعل؟ <a href="../login/">سجّل الدخول</a></p>
-        </form>
+        </DemoForm>
       </section>
     </main>
   );
