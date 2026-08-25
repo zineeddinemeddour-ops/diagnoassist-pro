@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowIcon, Brand, CheckIcon, Field, SafetyNote } from "../components";
+import { DemoForm } from "../demo-forms";
 
 export const metadata: Metadata = { title: "تسجيل الدخول | DiagnoAssist", description: "الوصول إلى مساحة عمل DiagnoAssist." };
 
@@ -14,7 +15,7 @@ export default function LoginPage() {
       </section>
       <section className="auth-panel">
         <a className="back-link" href="../">العودة إلى الموقع</a>
-        <form className="auth-card" action="../workspace/" method="get">
+        <DemoForm className="auth-card" destination="../workspace/">
           <div className="auth-card-heading"><span className="auth-icon">→</span><small>مرحبًا بعودتك</small><h2>تسجيل الدخول</h2><p>أدخل بيانات حسابك للمتابعة إلى مساحة العمل.</p></div>
           <Field label="البريد الإلكتروني أو اسم المستخدم" name="identity" placeholder="name@clinic.com" required />
           <Field label="كلمة المرور" name="password" type="password" placeholder="••••••••" required />
@@ -22,7 +23,7 @@ export default function LoginPage() {
           <button className="button button-primary auth-submit" type="submit">الدخول إلى المنصة <ArrowIcon /></button>
           <SafetyNote>هذه النسخة استعراضية؛ لا تُدخل بيانات حقيقية أو معلومات تخص المرضى.</SafetyNote>
           <p className="auth-switch">ليس لديك حساب؟ <a href="../register/">أنشئ حسابًا تجريبيًا</a></p>
-        </form>
+        </DemoForm>
       </section>
     </main>
   );
