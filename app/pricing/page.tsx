@@ -1,29 +1,25 @@
 import type { Metadata } from "next";
 import { ArrowIcon, CheckIcon, MarketingHeader, PageFooter } from "../components";
 
-export const metadata: Metadata = { title: "الباقات | DiagnoAssist", description: "باقات مرنة للأخصائيين والعيادات ومراكز الصحة النفسية." };
+export const metadata: Metadata = { title: "الوصول التجريبي | DiagnoAssist", description: "طرق استكشاف DiagnoAssist للأفراد والفرق." };
 
-const plans = [
-  { name: "البداية", audience: "للأخصائي الفردي", price: "2,000", accent: "mint", features: ["مستخدم واحد", "5 ملفات حالات", "اختباران أساسيان", "4 جلسات لكل حالة"] },
-  { name: "الممارسة", audience: "للعيادات النشطة", price: "5,500", accent: "blue", popular: true, features: ["حتى 3 مستخدمين", "20 ملف حالة", "مكتبة اختبارات موسعة", "10 جلسات لكل حالة"] },
-  { name: "المركز", audience: "للفرق والمؤسسات", price: "22,000", accent: "navy", features: ["مستخدمون متعددون", "ملفات حالات موسعة", "مكتبة الاختبارات الكاملة", "سجل جلسات غير محدود"] },
+const paths = [
+  { name: "جولة ذاتية", audience: "للتعرّف السريع", tag: "متاح الآن", featured: true, features: ["حالة خيالية مجهّلة", "المسار السريري الكامل", "لا يتطلب بيانات حقيقية"], cta: "فتح النموذج", href: "../login/" },
+  { name: "عرض للممارسات", audience: "للمختصين والعيادات", tag: "30 دقيقة", features: ["مراجعة الاحتياج وسير العمل", "نقاش الخصوصية والصلاحيات", "خطة اختبار قبل الإطلاق"], cta: "طلب عرض", href: "../checkout/" },
+  { name: "تقييم مؤسسي", audience: "للمراكز والفرق", tag: "حسب النطاق", features: ["أدوار المستخدمين والمراجعة", "متطلبات الحوكمة والتدقيق", "تحقق قانوني وأمني مستقل"], cta: "بدء التقييم", href: "../checkout/" },
 ];
 
 export default function PricingPage() {
   return (
     <main className="subpage">
       <MarketingHeader />
-      <section className="pricing-hero shell"><span className="page-kicker">باقات واضحة بلا تعقيد</span><h1>اختر المساحة التي<br />تناسب ممارستك.</h1><p>ابدأ بالحجم المناسب اليوم، وانتقل إلى الخطة التالية عندما ينمو فريقك.</p></section>
-      <section className="pricing-grid shell">
-        {plans.map((plan) => <article key={plan.name} className={`plan-card plan-${plan.accent}${plan.popular ? " popular" : ""}`}>
-          {plan.popular && <span className="popular-label">الأكثر ملاءمة</span>}
-          <div className="plan-top"><span>{plan.audience}</span><h2>{plan.name}</h2></div>
-          <div className="plan-price"><strong>{plan.price}</strong><span>دج<br /><small>شهريًا</small></span></div>
-          <ul>{plan.features.map((feature) => <li key={feature}><CheckIcon /> {feature}</li>)}</ul>
-          <a className={`button ${plan.popular ? "button-primary" : "button-quiet"}`} href="../checkout/">اختيار الباقة <ArrowIcon /></a>
+      <section className="pricing-hero shell"><span className="page-kicker">الوصول التجريبي</span><h1>استكشف المنصة<br />قبل أي قرار شراء.</h1><p>لا نعرض أسعارًا أو وعود امتثال غير معتمدة في نموذج التصميم. اختر طريقة الاستكشاف الأنسب لبيئة عملك.</p></section>
+      <section className="access-grid shell">
+        {paths.map((path)=><article key={path.name} className={`access-card${path.featured?" featured":""}`}>
+          <div className="access-top"><span>{path.audience}</span><i>{path.tag}</i></div><h2>{path.name}</h2><ul>{path.features.map(feature=><li key={feature}><CheckIcon /> {feature}</li>)}</ul><a className={`button ${path.featured?"button-primary":"button-secondary"}`} href={path.href}>{path.cta} <ArrowIcon /></a>
         </article>)}
       </section>
-      <section className="pricing-note shell"><strong>قبل الاشتراك</strong><p>هذه واجهة استعراضية للتصميم فقط. الأسعار والمزايا تحتاج إلى مراجعة واعتماد تجاري قبل إطلاق خدمة حقيقية.</p></section>
+      <section className="pricing-note shell"><strong>ملاحظة مهمة</strong><p>أي إطلاق فعلي يحتاج إلى تحقق مستقل من حماية البيانات، التراخيص المهنية، صلاحية أدوات القياس، الأمن، وشروط الاستخدام في البلد المستهدف.</p></section>
       <PageFooter />
     </main>
   );

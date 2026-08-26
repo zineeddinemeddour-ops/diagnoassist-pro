@@ -1,26 +1,23 @@
 import type { Metadata } from "next";
-import { ArrowIcon, Brand, CheckIcon, SafetyNote } from "../components";
+import { ArrowIcon, Brand, CheckIcon, Field, SafetyNote } from "../components";
+import { DemoForm } from "../demo-forms";
 
-export const metadata: Metadata = { title: "تفعيل الباقة | DiagnoAssist", description: "مراجعة باقة DiagnoAssist قبل التفعيل." };
+export const metadata: Metadata = { title: "طلب عرض | DiagnoAssist", description: "طلب جولة تعريفية لنموذج DiagnoAssist." };
 
 export default function CheckoutPage() {
   return (
-    <main className="checkout-page">
-      <header className="checkout-header shell"><Brand /><a href="../pricing/">العودة إلى الباقات</a></header>
-      <div className="checkout-grid shell">
-        <section className="checkout-copy">
-          <span className="page-kicker">الخطوة الأخيرة</span><h1>راجع الباقة<br />قبل التفعيل.</h1><p>صفحة دفع احترافية يجب أن تتصل بمزوّد دفع معتمد. لذلك تعرض هذه النسخة رحلة التفعيل فقط، دون جمع أرقام بطاقات أو رموز أمان.</p>
-          <div className="secure-principles"><div><CheckIcon /><span><strong>لا بيانات مالية في المتصفح</strong><small>المعالجة الحقيقية تكون لدى مزوّد دفع معتمد.</small></span></div><div><CheckIcon /><span><strong>لا حفظ لبيانات البطاقة</strong><small>لا تطلب الواجهة أي معلومات حساسة في النسخة التجريبية.</small></span></div></div>
-        </section>
-        <section className="order-card">
-          <div className="order-heading"><span>ملخص الطلب</span><strong>خطة الممارسة</strong></div>
-          <div className="order-line"><span>الاشتراك الشهري</span><strong>5,500 دج</strong></div>
-          <div className="order-line muted"><span>الضريبة</span><strong>تُحدد عند الإطلاق</strong></div>
-          <div className="order-total"><span>الإجمالي المبدئي</span><strong>5,500 دج</strong></div>
-          <SafetyNote>الدفع غير مفعّل في هذه النسخة. لا تُدخل أو ترسل أي بيانات مالية.</SafetyNote>
-          <a className="button button-primary checkout-button" href="../workspace/">استكشاف مساحة العمل <ArrowIcon /></a>
-          <a className="text-link" href="../pricing/">تغيير الباقة</a>
-        </section>
+    <main className="request-page">
+      <header className="checkout-header shell"><Brand /><a href="../pricing/">← العودة إلى خيارات الوصول</a></header>
+      <div className="request-grid shell">
+        <section className="request-copy"><span className="page-kicker">طلب عرض مهني</span><h1>ابدأ بالأسئلة الصحيحة<br />قبل التقنية.</h1><p>نراجع أولًا سير العمل، نوع البيانات، الأدوار، ومتطلبات الحوكمة. بعدها فقط يمكن تحديد نطاق منتج حقيقي.</p><div className="request-points"><div><CheckIcon /><span><strong>الاحتياج السريري</strong><small>ما القرار الذي تحتاج الأداة إلى دعمه؟</small></span></div><div><CheckIcon /><span><strong>البيانات والخصوصية</strong><small>ما الذي سيُجمع، ومن يراه، وكم يُحتفظ به؟</small></span></div><div><CheckIcon /><span><strong>القياس والمسؤولية</strong><small>ما الأدوات المرخّصة؟ ومن يراجع المخرجات؟</small></span></div></div></section>
+        <DemoForm className="request-card" destination="../workspace/">
+          <div className="auth-card-heading"><small>نموذج استعراضي</small><h2>طلب جولة تعريفية</h2><p>لن يُرسل النموذج فعليًا؛ سيأخذك إلى مساحة العمل التجريبية.</p></div>
+          <Field label="الاسم المهني" name="name" placeholder="الاسم المعروض" required autoComplete="name" />
+          <Field label="بريد العمل" name="email" type="email" placeholder="name@clinic.example" required autoComplete="email" />
+          <label className="form-field"><span>نوع البيئة *</span><select name="environment" required defaultValue=""><option value="" disabled>اختر البيئة</option><option>ممارسة فردية</option><option>عيادة أو فريق</option><option>مركز أو مؤسسة</option></select></label>
+          <SafetyNote>لا تكتب أسماء مرضى أو تفاصيل حالات أو أي بيانات صحية في هذا النموذج.</SafetyNote>
+          <button className="button button-primary auth-submit" type="submit">متابعة إلى النموذج <ArrowIcon /></button>
+        </DemoForm>
       </div>
     </main>
   );

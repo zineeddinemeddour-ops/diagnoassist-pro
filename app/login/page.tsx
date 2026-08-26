@@ -1,28 +1,28 @@
 import type { Metadata } from "next";
-import { ArrowIcon, Brand, CheckIcon, Field, SafetyNote } from "../components";
+import { ArrowIcon, Brand, CheckIcon, Field, Icon, SafetyNote } from "../components";
 import { DemoForm } from "../demo-forms";
 
-export const metadata: Metadata = { title: "تسجيل الدخول | DiagnoAssist", description: "الوصول إلى مساحة عمل DiagnoAssist." };
+export const metadata: Metadata = { title: "دخول النسخة التجريبية | DiagnoAssist", description: "الوصول إلى مساحة العمل التجريبية في DiagnoAssist." };
 
 export default function LoginPage() {
   return (
     <main className="auth-page">
       <section className="auth-story">
-        <Brand />
-        <div className="auth-story-copy"><span className="auth-kicker">مساحة العمل الإكلينيكية</span><h1>عد إلى الحالة،<br />لا إلى الفوضى.</h1><p>ملاحظات الجلسات، الاختبارات، والتقدّم في سياق واحد متصل.</p></div>
-        <div className="auth-proof"><div><CheckIcon /><span><strong>سجل واحد</strong><small>لكل حالة وكل جلسة</small></span></div><div><CheckIcon /><span><strong>قرارك أولًا</strong><small>مؤشرات للمساعدة فقط</small></span></div></div>
-        <div className="auth-path" aria-hidden="true"><i /><i /><i /><b /></div>
+        <Brand inverted />
+        <div className="auth-story-copy"><span className="auth-kicker">مساحة العمل السريرية</span><h1>عُد إلى سياق الحالة،<br />لا إلى الفوضى.</h1><p>الملاحظات والمراجعة والقياس والمتابعة في مكان واحد واضح.</p></div>
+        <div className="auth-preview-card"><div><Icon name="calendar" /><span><small>الموعد التالي</small><strong>14:30 · جلسة متابعة</strong></span></div><i>الحالة التجريبية 027</i></div>
+        <div className="auth-proof"><div><CheckIcon /><span><strong>إشراف بشري</strong><small>المختص يراجع ويعتمد</small></span></div><div><CheckIcon /><span><strong>بيانات مجهّلة</strong><small>للعرض فقط</small></span></div></div>
       </section>
       <section className="auth-panel">
-        <a className="back-link" href="../">العودة إلى الموقع</a>
+        <a className="back-link" href="../">← العودة إلى الموقع</a>
         <DemoForm className="auth-card" destination="../workspace/">
-          <div className="auth-card-heading"><span className="auth-icon">→</span><small>مرحبًا بعودتك</small><h2>تسجيل الدخول</h2><p>أدخل بيانات حسابك للمتابعة إلى مساحة العمل.</p></div>
-          <Field label="البريد الإلكتروني أو اسم المستخدم" name="identity" placeholder="name@clinic.com" required />
-          <Field label="كلمة المرور" name="password" type="password" placeholder="••••••••" required />
+          <div className="auth-card-heading"><span className="auth-icon"><Icon name="shield" /></span><small>وصول تجريبي</small><h2>تسجيل الدخول</h2><p>أدخل أي بيانات تجريبية لفتح مساحة العمل. لا يتم التحقق منها أو حفظها.</p></div>
+          <Field label="البريد الإلكتروني" name="identity" type="email" placeholder="demo@clinic.example" required autoComplete="email" />
+          <Field label="كلمة المرور" name="password" type="password" placeholder="8 أحرف على الأقل" required autoComplete="current-password" />
           <div className="form-meta"><label><input type="checkbox" name="remember" /> تذكّرني</label><a href="#">نسيت كلمة المرور؟</a></div>
-          <button className="button button-primary auth-submit" type="submit">الدخول إلى المنصة <ArrowIcon /></button>
-          <SafetyNote>هذه النسخة استعراضية؛ لا تُدخل بيانات حقيقية أو معلومات تخص المرضى.</SafetyNote>
-          <p className="auth-switch">ليس لديك حساب؟ <a href="../register/">أنشئ حسابًا تجريبيًا</a></p>
+          <button className="button button-primary auth-submit" type="submit">فتح الحالة التجريبية <ArrowIcon /></button>
+          <SafetyNote tone="warning">لا تُدخل اسم مريض أو بريده أو أي معلومة صحية حقيقية.</SafetyNote>
+          <p className="auth-switch">تريد التعرف على التجربة أولًا؟ <a href="../register/">اطلب جولة تعريفية</a></p>
         </DemoForm>
       </section>
     </main>
