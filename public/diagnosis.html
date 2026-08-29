@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التشخيص | DIAGNO-ASSIST</title>
+    <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #fafcff;
+            color: #12294e;
+            min-height: 100vh;
+        }
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+        }
+        .blob-1 { width: 420px; height: 420px; background: #c8daff; top: -120px; left: -100px; }
+        .blob-2 { width: 380px; height: 380px; background: #b8ecd8; bottom: -100px; right: -80px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .nav-brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .nav-brand .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+        .nav-brand .brand-name { font-size: 19px; font-weight: 800; color: #12294e; letter-spacing: 1px; }
+        .nav-brand .brand-sub { font-size: 11px; color: #7f92b5; font-weight: 600; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            text-decoration: none;
+            color: #41547f;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #2563eb; }
+        .nav-links a .ico { font-size: 16px; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-purple {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+        }
+        .btn-purple:hover { transform: translateY(-2px); }
+
+        .crumb {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 40px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #93a6c9;
+            font-size: 14px;
+        }
+        .crumb a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .crumb .sep { color: #c8daff; }
+
+        .diag-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 40px 60px;
+        }
+        .diag-title { text-align: center; margin-bottom: 30px; }
+        .diag-title h1 { font-size: 32px; color: #12294e; margin-bottom: 8px; }
+        .diag-title h1 .grad {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .diag-title p { color: #5c6f96; font-size: 15px; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 18px;
+            padding: 22px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: #2563eb; }
+        .stat-card .s-icon {
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #e9f1ff, #e6faf4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin: 0 auto 12px;
+        }
+        .stat-card .s-num { font-size: 30px; font-weight: 800; color: #2563eb; }
+        .stat-card .s-label { font-size: 14px; color: #5c6f96; font-weight: 700; margin-top: 4px; }
+
+        .diag-box {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 22px;
+            padding: 28px;
+            box-shadow: 0 14px 40px rgba(37, 99, 235, 0.08);
+        }
+        .diag-box h2 {
+            font-size: 19px;
+            color: #12294e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .diag-box .sub { font-size: 13.5px; color: #7f92b5; margin-bottom: 16px; }
+        .symptoms-area {
+            width: 100%;
+            border: 2px solid #e3ecfe;
+            border-radius: 14px;
+            padding: 16px 18px;
+            font-size: 15px;
+            color: #12294e;
+            background: #fafcff;
+            outline: none;
+            resize: vertical;
+            min-height: 180px;
+            line-height: 1.9;
+            transition: border-color 0.3s;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+        .symptoms-area:focus { border-color: #2563eb; }
+        .symptoms-area::placeholder {
+            color: #93a6c9;
+            font-size: 14.5px;
+            font-style: italic;
+        }
+        .counter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+        .count-pill {
+            font-size: 13px;
+            font-weight: 700;
+            color: #41547f;
+            background: #e9f1ff;
+            border-radius: 20px;
+            padding: 6px 14px;
+        }
+        .count-pill.warn { background: #fdf0d9; color: #b45309; border: 1px solid #f5d47a; }
+        .count-pill.ok { background: #dff6e8; color: #15803d; border: 1px solid #86efac; }
+
+        .demo-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .btn-demo {
+            flex: 1; min-width: 160px;
+            color: #fff; border: none; padding: 12px;
+            border-radius: 12px; font-weight: 800; font-size: 13.5px;
+            cursor: pointer; transition: transform 0.2s;
+        }
+        .btn-demo:hover { transform: translateY(-2px); }
+        .btn-demo-green { background: linear-gradient(135deg, #16a34a, #34d399); }
+        .btn-demo-blue { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+
+        .btn-analyze {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 17px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+        }
+        .btn-analyze:hover { transform: translateY(-2px); }
+
+        .analyzing-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 41, 78, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            backdrop-filter: blur(6px);
+            text-align: center;
+            padding: 20px;
+        }
+        .analyzing-overlay.show { display: flex; animation: fadeBg 0.4s ease-out; }
+        @keyframes fadeBg { from { opacity: 0; } to { opacity: 1; } }
+        .an-icon {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            color: #fff;
+            box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.6);
+            animation: pulseRing 1.4s infinite, iconBob 1.4s ease-in-out infinite;
+            margin-bottom: 26px;
+        }
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.6); }
+            100% { box-shadow: 0 0 0 45px rgba(96, 165, 250, 0); }
+        }
+        @keyframes iconBob {
+            0%, 100% { transform: translateY(0) rotate(-4deg); }
+            50% { transform: translateY(-14px) rotate(4deg); }
+        }
+        .an-title {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .an-sub { color: #c8daff; font-size: 15px; margin-bottom: 30px; }
+        .an-progress {
+            width: 320px;
+            max-width: 80vw;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .an-progress i {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #60a5fa, #34d399);
+            border-radius: 6px;
+            animation: fillProgress 10s linear forwards;
+        }
+        @keyframes fillProgress { from { width: 0; } to { width: 100%; } }
+        .an-steps { margin-top: 22px; color: #c8daff; font-size: 13px; line-height: 2; }
+
+        .suggest {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .suggest .chip {
+            background: #e9f1ff;
+            border: 1px solid #c8daff;
+            color: #41547f;
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .suggest .chip:hover { background: #dbe7fe; transform: translateY(-2px); }
+
+        footer {
+            background: #12294e;
+            color: #c8daff;
+            margin-top: 20px;
+        }
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 44px 50px 30px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 34px;
+        }
+        .footer-col h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+        .footer-col a {
+            display: block;
+            color: #b3a4d9;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: #fff; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .footer-brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .footer-brand .brand-name { color: #fff; font-weight: 800; letter-spacing: 1px; }
+        .footer-brand .brand-sub { display: block; font-size: 11px; color: #b3a4d9; margin-top: 2px; }
+        .footer-col p { font-size: 14px; line-height: 1.8; color: #c8daff; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding: 18px;
+            color: #7f92b5;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .stats { grid-template-columns: 1fr; }
+            .diag-wrap { padding: 24px 18px 40px; }
+            nav { padding: 14px 18px; }
+            .nav-links { display: none; }
+            .crumb { padding: 16px 18px 0; }
+            .footer-grid { grid-template-columns: 1fr 1fr; padding: 30px 18px; }
+        }
+    </style>
+    <link rel="stylesheet" href="site-ui.css" data-diagnoassist-ui="v2">
+    <script src="backend-storage.js"></script>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav>
+        <a class="nav-brand" href="index.html">
+            <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico">🏠</span> الرئيسية</a>
+            <a href="#"><span class="ico">🔬</span> كيف يعمل</a>
+            <a href="#"><span class="ico">🩺</span> المميزات</a>
+            <a href="#"><span class="ico">💰</span> الأسعار</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-purple">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <div class="crumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="sep">‹</span>
+        <a href="pricing.html">الأسعار</a>
+        <span class="sep">‹</span>
+        <a href="payment.html">الدفع</a>
+        <span class="sep">‹</span>
+        <a href="patient.html">ملف المريض</a>
+        <span class="sep">‹</span>
+        <span>التشخيص</span>
+    </div>
+
+    <div class="diag-wrap">
+        <div class="diag-title">
+            <h1>التشخيص <span class="grad">الفارقي</span></h1>
+            <p>أدخل أعراض المريض ليقدّم المحرك الاضطرابات المحتملة مرتبة حسب الأرجحية</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="s-icon">🗓️</div>
+                <div class="s-num">3</div>
+                <div class="s-label">إجمالي الجلسات</div>
+            </div>
+            <div class="stat-card">
+                <div class="s-icon">📋</div>
+                <div class="s-num">2</div>
+                <div class="s-label">الاختبارات المطبقة</div>
+            </div>
+            <div class="stat-card">
+                <div class="s-icon">📈</div>
+                <div class="s-num">35%</div>
+                <div class="s-label">نسبة التحسّن الملحوظ</div>
+            </div>
+        </div>
+
+        <div class="diag-box">
+            <h2>🩺 كتابة الأعراض</h2>
+            <div class="sub">اكتب الأعراض بالمصطلحات النفسية العلمية بدقة</div>
+            <textarea id="symptoms" class="symptoms-area" placeholder="أدخل ما لا يقل عن 15 عرضًا بمصطلحات ذات علاقة بعلم النفس..."></textarea>
+            <div class="counter-row">
+                <div id="countPill" class="count-pill">0 / 15 عرض</div>
+                <span style="font-size:12.5px; color:#93a6c9;">تختفي الملاحظة تلقائيًا عند بدء الكتابة</span>
+            </div>
+            <div class="suggest">
+                <span class="chip">قلق معمم</span>
+                <span class="chip">استرجاع مؤلم</span>
+                <span class="chip">تجنب</span>
+                <span class="chip">فرط يقظة</span>
+                <span class="chip">تقلب مزاج</span>
+                <span class="chip">اضطراب نوم</span>
+                <span class="chip">عزلة اجتماعية</span>
+            </div>
+            <div class="demo-row">
+                <button class="btn-demo btn-demo-green" id="demoPtsd">⚡ تجربة سريعة: أعراض PTSD</button>
+                <button class="btn-demo btn-demo-blue" id="demoMdd">⚡ تجربة سريعة: أعراض الاكتئاب</button>
+            </div>
+            <button class="btn-analyze" id="analyzeBtn">تحليل الأعراض</button>
+        </div>
+    </div>
+
+    <div class="analyzing-overlay" id="analyzingOverlay">
+        <div class="an-icon">🔍</div>
+        <div class="an-title">جارٍ تحليل الأعراض...</div>
+        <div class="an-sub">مقارنة الأعراض بالكلمات المفتاحية بين اضطرابين فقط: PTSD و MDD</div>
+        <div class="an-progress"><i id="anBar"></i></div>
+        <div class="an-steps">
+            <div id="stepLine">1. تحليل المعايير والمطابقات...</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="#">من نحن</a>
+                <a href="#">مميزات المنصة</a>
+                <a href="#">كيف يعمل</a>
+                <a href="#">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="#">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>window.backendReady.then(() => {
+
+        const area = document.getElementById('symptoms');
+        const pill = document.getElementById('countPill');
+
+        function normalize(t) {
+            return (t || '').replace(/[\u064B-\u0652\u0670]/g, '');
+        }
+
+        function countSymptoms() {
+            const text = area.value.trim();
+            if (!text) { pill.textContent = '0 / 15 عرض'; pill.className = 'count-pill'; return; }
+            const words = text.split(/[\s،,؛;\n]+/).filter(w => w.length > 0);
+            const n = words.length;
+            pill.textContent = n + ' / 15 عرض';
+            pill.className = n >= 15 ? 'count-pill ok' : 'count-pill warn';
+        }
+        area.addEventListener('input', countSymptoms);
+
+        const DISORDERS = [
+            {
+                id: 'ptsd',
+                name: 'اضطراب ما بعد الصدمة (PTSD)',
+                ico: '🧠',
+                min: 6,
+                groups: [
+                    { label: 'استرجاع مؤلم', k: ['استرجاع', 'اجترار', 'ذكريات', 'تذكر', 'ذاكرة', 'ماضي', 'مراودة'] },
+                    { label: 'كوابيس مزعجة', k: ['كابوس', 'كوابيس', 'أحلام مزعجة', 'أحلام مخيفة'] },
+                    { label: 'ذكريات مفاجئة', k: ['ومضة', 'فلاش', 'ومضات', 'ذكريات مفاجئة'] },
+                    { label: 'إعادة عيش الحدث', k: ['يعيش الحدث', 'يحدث الآن', 'إعادة عيش', 'يتكرر أمامه'] },
+                    { label: 'ضيق عند المذكّرات', k: ['ضيق تنفس', 'خنقة', 'اختناق', 'مذكّر', 'مذكّرات', 'تذكير'] },
+                    { label: 'تجنّب الأماكن', k: ['تجنب الأماكن', 'يبتعد', 'يهرب', 'تحاشى', 'يتفادى'] },
+                    { label: 'تجنّب الأفكار', k: ['تجنب الأفكار', 'يكبت', 'تجنب', 'تفادي التفكير', 'الهروب من التفكير'] },
+                    { label: 'صعوبة تذكر التفاصيل', k: ['نسيان تفاصيل', 'لا يتذكر', 'صعوبة تذكر', 'فجوات ذاكرة'] },
+                    { label: 'أفكار سلبية', k: ['أفكار سلبية', 'تشاؤم', 'سوداوية', 'سلبي'] },
+                    { label: 'لوم النفس أو الآخرين', k: ['لوم', 'يلوم', 'ذنب'] },
+                    { label: 'فقدان الاهتمام', k: ['فقدان الاهتمام', 'اهتمام', 'متعة', 'لا يستمتع', 'أنشطة'] },
+                    { label: 'غربة وانفصال', k: ['غربة', 'انفصال', 'عزلة', 'وحدة', 'منفصل'] },
+                    { label: 'غياب المشاعر الإيجابية', k: ['مشاعر إيجابية', 'فرح', 'سعادة', 'مرح', 'حب'] },
+                    { label: 'اضطراب النوم', k: ['أرق', 'نوم', 'سهر', 'استيقاظ ليلي'] },
+                    { label: 'نوبات غضب', k: ['غضب', 'انفعال', 'عصبية', 'نوبات غضب'] },
+                    { label: 'صعوبة التركيز', k: ['تركيز', 'تشتت', 'ذهن', 'انتباه'] },
+                    { label: 'فرط اليقظة', k: ['يقظة', 'ترقب', 'حذر', 'مراقبة', 'خطر'] },
+                    { label: 'استجابة جفل', k: ['جفل', 'انتفاض', 'يفزع', 'ينزعج', 'أصوات'] },
+                    { label: 'سلوك متهور', k: ['اندفاعي', 'طائش', 'تهور', 'تدميري'] },
+                    { label: 'خدر عاطفي', k: ['خدر', 'تجمد', 'لا يشعر', 'انفصال عاطفي'] },
+                    { label: 'فقدان الأمل', k: ['أمل', 'مستقبل', 'يأس'] },
+                    { label: 'حساسية للمثيرات', k: ['حساسية', 'منبهات', 'ضوضاء', 'إضاءة'] },
+                    { label: 'خوف من تكرار الصدمة', k: ['خوف', 'تكرر', 'يتكرر', 'خشية', 'فزع'] },
+                    { label: 'انسحاب اجتماعي', k: ['انسحاب', 'اجتماعي', 'مناسبات', 'تجمعات', 'أصدقاء'] }
+                ]
+            },
+            {
+                id: 'mdd',
+                name: 'الاكتئاب الشديد (MDD)',
+                ico: '🌧️',
+                min: 5,
+                groups: [
+                    { label: 'مزاج منخفض', k: ['مزاج منخفض', 'حزن', 'يأس', 'فراغ', 'بكاء', 'دموع', 'كآبة', 'محبط', 'زعل'] },
+                    { label: 'فقدان الاهتمام والمتعة', k: ['اهتمام', 'متعة', 'استمتاع', 'لا يهتم', 'ملل', 'انعدام', 'أنشطة'] },
+                    { label: 'تغير الوزن أو الشهية', k: ['وزن', 'شهية', 'أكل', 'طعام', 'نحف', 'سمنة'] },
+                    { label: 'أرق أو فرط نوم', k: ['أرق', 'نوم', 'سهر', 'فرط نوم', 'نعاس', 'نوام'] },
+                    { label: 'هياج أو خمول حركي', k: ['هياج', 'خمول', 'بطء', 'تململ', 'كسل', 'حركي'] },
+                    { label: 'تعب وفقدان الطاقة', k: ['تعب', 'طاقة', 'إرهاق', 'إجهاد', 'ضعف', 'فقدان الطاقة'] },
+                    { label: 'انعدام القيمة أو الذنب', k: ['ذنب', 'قيمة', 'فاشل', 'عديم', 'مذنب', 'دونية', 'لوم'] },
+                    { label: 'صعوبة التركيز أو الحسم', k: ['تركيز', 'قرار', 'حسم', 'تردد', 'تشتت', 'تفكير'] },
+                    { label: 'أفكار الموت والانتحار', k: ['موت', 'انتحار', 'يموت', 'إنهاء', 'أفكار سوداء'] }
+                ]
+            }
+        ];
+
+        function analyze(text) {
+            const norm = normalize(text);
+            return DISORDERS.map(d => {
+                const hits = [];
+                d.groups.forEach((g, i) => {
+                    if (g.k.some(kw => norm.includes(normalize(kw)))) hits.push(i);
+                });
+                return {
+                    id: d.id, name: d.name, ico: d.ico,
+                    matched: hits.length, total: d.groups.length,
+                    pct: Math.round(hits.length / d.groups.length * 100),
+                    min: d.min,
+                    labels: hits.map(i => d.groups[i].label)
+                };
+            }).sort((a, b) => b.pct - a.pct);
+        }
+
+        const AP = JSON.parse(backendStorage.getItem('diagActivePatient') || 'null');
+        const ptKey = base => AP ? base + '_' + AP.id : base;
+
+        document.getElementById('analyzeBtn').addEventListener('click', () => {
+            const text = area.value.trim();
+            const words = text.split(/[\s،,؛;\n]+/).filter(w => w.length > 0);
+            if (words.length < 15) {
+                alert('يرجى إدخال ما لا يقل عن 15 عرضًا بمصطلحات نفسية قبل التحليل.');
+                return;
+            }
+
+            const results = analyze(text);
+            let winner = null;
+            if (results[0] && results[0].matched >= results[0].min && results[0].pct >= 30) winner = results[0];
+            else if (results[1] && results[1].matched >= results[1].min && results[1].pct >= 30) winner = results[1];
+            const other = results.find(r => r.id !== (winner ? winner.id : null)) || null;
+
+            backendStorage.setItem(ptKey('diagResult'), JSON.stringify({
+                winner: winner,
+                other: other,
+                text: text,
+                date: new Date().toLocaleString()
+            }));
+
+            const overlay = document.getElementById('analyzingOverlay');
+            const stepLine = document.getElementById('stepLine');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+
+            const steps = [
+                '1. فحص حضور الكلمات المفتاحية في الأعراض المدخلة...',
+                '2. مطابقة الأعراض مع قاعدتي PTSD و MDD...',
+                '3. اختيار الاضطراب الأعلى تطابقًا فقط...',
+                '4. إعداد نتيجة التحليل النهائية...'
+            ];
+            let s = 0;
+            const stepTimer = setInterval(() => {
+                s = Math.min(s + 1, steps.length - 1);
+                stepLine.textContent = steps[s];
+            }, 2500);
+
+            setTimeout(() => {
+                clearInterval(stepTimer);
+                window.location.href = 'results.html';
+            }, 10000);
+        });
+
+        document.querySelectorAll('.suggest .chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                area.value += (area.value.trim() ? '، ' : '') + chip.textContent;
+                countSymptoms();
+            });
+        });
+
+        const DEMO_TEXTS = {
+            ptsd: 'استرجاع متكرر ومؤلم للحدث الصادم دون رغبة، كوابيس مزعجة ومتكررة مرتبطة بالحدث، ذكريات مفاجئة تعيد إحياء الصدمة، شعور وكأن الحدث يحدث الآن مجددًا، ضيق نفسي شديد عند التعرض لأي مذكّر بالصدمة، تجنّب الأماكن أو الأشخاص المرتبطين بالحدث، تجنّب الأفكار والمشاعر المذكّرة بالصدمة، صعوبة في تذكر تفاصيل مهمة من الحدث، أفكار سلبية مستمرة عن الذات أو العالم، لوم النفس أو الآخرين على ما حدث، انخفاض الاهتمام بالأنشطة التي كانت ممتعة، الشعور بالانفصال والغربة عن الآخرين، عدم القدرة على الشعور بمشاعر إيجابية، اضطراب النوم وصعوبة الدخول أو الاستمرار فيه، نوبات غضب وتهيّج مفرط، صعوبة التركيز، فرط اليقظة والترقب الدائم للخطر، استجابة جفل مفرطة والانتفاض من الأصوات المفاجئة، سلوك متهور أو مدمر للذات، خدر عاطفي، فقدان الأمل ونظرة سلبية للمستقبل، الحساسية الزائدة للمثيرات البيئية، الخوف من تكرار الصدمة، الانسحاب الاجتماعي والعزلة',
+            mdd: 'مزاج منخفض معظم اليوم كل يوم تقريبًا، انخفاض واضح في الاهتمام أو الاستمتاع في كل الأنشطة، فقدان وزن بارز أو زيادة مع انخفاض أو ارتفاع الشهية، أرق أو فرط نوم كل يوم تقريبًا، هياج نفسي حركي أو خمول، تعب أو فقدان الطاقة كل يوم تقريبًا، أحاسيس بانعدام القيمة أو شعور مفرط بالذنب، انخفاض القدرة على التفكير أو التركيز أو عدم الحسم، أفكار متكررة عن الموت أو تفكير انتحاري'
+        };
+        document.getElementById('demoPtsd').addEventListener('click', () => {
+            area.value = DEMO_TEXTS.ptsd;
+            countSymptoms();
+            area.focus();
+        });
+        document.getElementById('demoMdd').addEventListener('click', () => {
+            area.value = DEMO_TEXTS.mdd;
+            countSymptoms();
+            area.focus();
+        });
+    
+});</script>
+
+    <script>window.backendReady.then(() => {
+
+        (function () {
+            const btn = document.querySelector('.nav-actions .btn-purple');
+            if (!btn) return;
+            const u = JSON.parse(backendStorage.getItem('diagUser') || 'null');
+            if (u) {
+                btn.innerHTML = (u.isAdmin ? '👨‍💼' : '👤') + ' ' + (u.isAdmin ? 'المدير' : u.name);
+                btn.style.background = '#e9f1ff';
+                btn.style.color = '#2563eb';
+                btn.style.border = '1.5px solid #2563eb';
+                btn.onclick = () => {
+                    if (confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+                        backendLogout();
+                    }
+                };
+            } else {
+                btn.onclick = () => { location.href = 'login.html'; };
+            }
+        })();
+    
+});</script>
+
+</body>
+</html>

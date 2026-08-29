@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملف المريض | DIAGNO-ASSIST</title>
+    <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #fafcff;
+            color: #12294e;
+            min-height: 100vh;
+        }
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+        }
+        .blob-1 { width: 420px; height: 420px; background: #c8daff; top: -120px; left: -100px; }
+        .blob-2 { width: 380px; height: 380px; background: #b8ecd8; bottom: -100px; right: -80px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .nav-brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .nav-brand .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+        .nav-brand .brand-name { font-size: 19px; font-weight: 800; color: #12294e; letter-spacing: 1px; }
+        .nav-brand .brand-sub { font-size: 11px; color: #7f92b5; font-weight: 600; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            text-decoration: none;
+            color: #41547f;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #2563eb; }
+        .nav-links a .ico { font-size: 16px; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-purple {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+        }
+        .btn-purple:hover { transform: translateY(-2px); }
+        .pt-list-btn {
+            background: transparent;
+            border: 1.5px solid #c7d8f7;
+            color: #2563eb;
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pt-list-btn:hover { border-color: #2563eb; background: #e9f1ff; transform: translateY(-2px); }
+        .patients-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 20, 45, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .patients-modal.show { display: flex; }
+        .pm-box {
+            background: #fff;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 82vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(10, 20, 45, 0.3);
+        }
+        .pm-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e3ecfe;
+        }
+        .pm-head h3 { font-size: 15px; color: #12294e; }
+        .pm-close {
+            background: #e9f1ff;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #2563eb;
+        }
+        .pm-list {
+            overflow-y: auto;
+            padding: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .pm-item {
+            border: 1.5px solid #e3ecfe;
+            border-radius: 12px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            text-align: right;
+        }
+        .pm-item:hover { border-color: #2563eb; background: #f3f7ff; transform: translateY(-2px); }
+        .pm-item .pm-name { font-weight: 800; color: #12294e; font-size: 13.5px; }
+        .pm-item .pm-meta { font-size: 11.5px; color: #7f92b5; margin-top: 4px; line-height: 1.6; }
+        .pm-item .pm-tag {
+            display: inline-block;
+            margin-top: 6px;
+            background: #e9f1ff;
+            color: #2563eb;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+        .pm-item.slot {
+            border-style: dashed;
+            border-color: #c7d8f7;
+            background: #fafcff;
+            color: #93a6c9;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 96px;
+        }
+        .pm-item.slot:hover { border-color: #2563eb; color: #2563eb; background: #eef4ff; }
+        .pm-item.slot .plus { font-size: 26px; line-height: 1; }
+        .pm-item.slot .slot-txt { font-size: 12px; font-weight: 700; margin-top: 4px; }
+        .pm-item.active { border-color: #2563eb; background: #eef4ff; box-shadow: 0 4px 14px rgba(37,99,235,.15); }
+        @media (max-width: 520px) { .pm-list { grid-template-columns: 1fr; } }
+
+        .crumb {
+            max-width: 1020px;
+            margin: 0 auto;
+            padding: 20px 40px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #93a6c9;
+            font-size: 14px;
+        }
+        .crumb a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .crumb .sep { color: #c8daff; }
+
+        .patient-wrap {
+            max-width: 1020px;
+            margin: 0 auto;
+            padding: 30px 40px 60px;
+        }
+        .patient-title { text-align: center; margin-bottom: 30px; }
+        .patient-title h1 { font-size: 32px; color: #12294e; margin-bottom: 8px; }
+        .patient-title h1 .grad {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .patient-title p { color: #5c6f96; font-size: 15px; }
+
+        .patient-card {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 14px 40px rgba(37, 99, 235, 0.1);
+        }
+        .patient-toggle {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+        .pt-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 14px;
+            padding: 12px 26px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #41547f;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pt-btn:hover { border-color: #2563eb; transform: translateY(-2px); }
+        .pt-btn.active {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            border-color: #2563eb;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+        }
+        .patient-head {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            padding: 18px 26px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #fff;
+        }
+        .patient-head .avatar {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+        .patient-head .p-name { font-size: 18px; font-weight: 800; }
+        .patient-head .p-sub { font-size: 13px; opacity: 0.85; }
+        .patient-head .file-num {
+            margin-right: auto;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+            direction: ltr;
+        }
+
+        .patient-body { padding: 26px; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 22px;
+        }
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #41547f;
+            margin-bottom: 6px;
+        }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            border: 2px solid #e3ecfe;
+            border-radius: 12px;
+            padding: 11px 14px;
+            font-size: 15px;
+            color: #12294e;
+            background: #fafcff;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus { border-color: #2563eb; }
+        .field.full { grid-column: 1 / -1; }
+        .field textarea { resize: vertical; min-height: 80px; }
+
+        .patient-actions {
+            display: flex;
+            gap: 14px;
+            margin-top: 24px;
+        }
+        .btn-save {
+            flex: 1;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 13px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-save:hover { transform: translateY(-2px); }
+        .patient-actions .ghost2 {
+            background: #fff;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+        .btn-back {
+            background: #fff;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 26px;
+            border-radius: 13px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .note {
+            margin-top: 18px;
+            background: #e9f1ff;
+            border: 1px solid #c8daff;
+            border-radius: 12px;
+            padding: 13px 18px;
+            font-size: 13.5px;
+            color: #41547f;
+            line-height: 1.8;
+        }
+
+        .visits { display: flex; flex-direction: column; gap: 12px; }
+        .visit {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .visit .v-date {
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 12px;
+            border-radius: 10px;
+            direction: ltr;
+            min-width: 84px;
+            text-align: center;
+        }
+        .visit .v-body {
+            background: #fafcff;
+            border: 2px solid #e3ecfe;
+            border-radius: 12px;
+            padding: 12px 16px;
+            flex: 1;
+        }
+        .visit .v-body b { color: #12294e; font-size: 14px; }
+        .visit .v-body p { color: #5c6f96; font-size: 13.5px; line-height: 1.8; margin-top: 5px; }
+
+        footer {
+            background: #12294e;
+            color: #c8daff;
+            margin-top: 20px;
+        }
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 44px 50px 30px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 34px;
+        }
+        .footer-col h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+        .footer-col a {
+            display: block;
+            color: #b3a4d9;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: #fff; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .footer-brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .footer-brand .brand-name { color: #fff; font-weight: 800; letter-spacing: 1px; }
+        .footer-brand .brand-sub { display: block; font-size: 11px; color: #b3a4d9; margin-top: 2px; }
+        .footer-col p { font-size: 14px; line-height: 1.8; color: #c8daff; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding: 18px;
+            color: #7f92b5;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .patient-wrap { padding: 24px 18px 40px; }
+            nav { padding: 14px 18px; }
+            .nav-links { display: none; }
+            .crumb { padding: 16px 18px 0; }
+            .footer-grid { grid-template-columns: 1fr 1fr; padding: 30px 18px; }
+            .patient-actions { flex-direction: column; }
+        }
+    </style>
+    <link rel="stylesheet" href="site-ui.css" data-diagnoassist-ui="v2">
+    <script src="backend-storage.js"></script>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav>
+        <a class="nav-brand" href="index.html">
+            <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico">🏠</span> الرئيسية</a>
+            <a href="#"><span class="ico">🔬</span> كيف يعمل</a>
+            <a href="#"><span class="ico">🩺</span> المميزات</a>
+            <a href="#"><span class="ico">💰</span> الأسعار</a>
+        </div>
+        <div class="nav-actions">
+            <button class="pt-list-btn" id="patientsListBtn">👥 المرضى</button>
+            <button class="btn-purple">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <div class="crumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="sep">‹</span>
+        <a href="pricing.html">الأسعار</a>
+        <span class="sep">‹</span>
+        <a href="payment.html">الدفع</a>
+        <span class="sep">‹</span>
+        <span>ملف المريض</span>
+    </div>
+
+    <div class="patient-wrap">
+        <div class="patient-title">
+            <h1>ملف <span class="grad">المريض</span></h1>
+            <p id="activeChip">أدخل بيانات المريض لبدء أول جلسة تشخيص</p>
+            <button class="pt-list-btn" id="patientsListBtn2" style="margin-top:14px;">👥 قائمة المرضى</button>
+        </div>
+
+        <div class="patient-toggle">
+            <button class="pt-btn active" id="ptRegistered">👤 مريض مسجل</button>
+            <button class="pt-btn" id="ptNew">🆕 مريض جديد</button>
+        </div>
+
+        <div class="patient-card">
+            <div class="patient-head">
+                <div class="avatar">م</div>
+                <div>
+                    <div class="p-name">محمد عبد الله</div>
+                    <div class="p-sub">ملف مريض — قابل للتعديل دائمًا</div>
+                </div>
+                <span class="file-num">ملف رقم: PT-2026-0135</span>
+            </div>
+
+            <div class="patient-body">
+                <div class="form-grid">
+                    <div class="field">
+                        <label>الاسم الكامل للمريض</label>
+                        <input value="محمد عبد الله">
+                    </div>
+                    <div class="field">
+                        <label>رقم الهاتف</label>
+                        <input value="0550 12 34 56" style="direction:ltr; text-align:left;">
+                    </div>
+                    <div class="field">
+                        <label>تاريخ الميلاد</label>
+                        <input value="15/03/1998" style="direction:ltr; text-align:left;">
+                    </div>
+                    <div class="field">
+                        <label>العمر</label>
+                        <input value="28 سنة" style="direction:ltr; text-align:left;">
+                    </div>
+                    <div class="field">
+                        <label>الجنس</label>
+                        <select>
+                            <option selected>ذكر</option>
+                            <option>أنثى</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>الحالة الاجتماعية</label>
+                        <select>
+                            <option selected>أعزب</option>
+                            <option>متزوج</option>
+                            <option>مطلق</option>
+                            <option>أرمل</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>المستوى التعليمي</label>
+                        <select>
+                            <option>ابتدائي</option>
+                            <option>متوسط</option>
+                            <option>ثانوي</option>
+                            <option selected>جامعي</option>
+                            <option>دراسات عليا</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>المهنة</label>
+                        <input value="معلم">
+                    </div>
+                    <div class="field">
+                        <label>العنوان</label>
+                        <input value="الجزائر العاصمة، الجزائر">
+                    </div>
+                    <div class="field">
+                        <label>البريد الإلكتروني</label>
+                        <input value="mohamed.eljems@gmail.com" style="direction:ltr; text-align:left;">
+                    </div>
+                    <div class="field full">
+                        <label>السبب الرئيسي للزيارة</label>
+                        <textarea>تعرض لصدمة نفسية مؤخرًا، ويعاني من مشاعر وذكريات متعلقة بها كالقلق الشديد والاسترجاع المتكرر للموقف الصادم، مع صعوبة في النوم والتركيز.</textarea>
+                    </div>
+                    <div class="field full">
+                        <label>ملاحظات إضافية</label>
+                        <textarea>لا تاريخ سابق للأمراض النفسية — أول استشارة على المنصة. يُلاحظ تجنب المواقف المذكّرة بالحادث، وتراجع الاهتمام بالأنشطة اليومية منذ ثلاثة أسابيع. يُنصح بتقييم شامل والتخطيط لجلسات دعم نفسي متدرجة.</textarea>
+                    </div>
+                    <div class="field full">
+                        <label>سجل الزيارات</label>
+                        <div class="visits">
+                            <div class="visit">
+                                <span class="v-date">12/07/2026</span>
+                                <div class="v-body">
+                                    <b>الزيارة الأولى</b>
+                                    <p>حضر المريض في الموعد وبدا متعاونًا ومنفتحًا. أبدى رغبة في المساعدة مع تردد عند تفاصيل الحادث. تم بناء علاقة تواصل أولية وشرح آلية المنصة، ووافق على المتابعة الأسبوعية.</p>
+                                </div>
+                            </div>
+                            <div class="visit">
+                                <span class="v-date">19/07/2026</span>
+                                <div class="v-body">
+                                    <b>الزيارة الثانية</b>
+                                    <p>طُبّق اختبار اضطراب ما بعد الصدمة، وتم تحديد أهداف علاجية مشتركة. بدأ استعراض تقنيات الاسترخاء الانفعالي وأساسيات التنظيم العاطفي.</p>
+                                </div>
+                            </div>
+                            <div class="visit">
+                                <span class="v-date">26/07/2026</span>
+                                <div class="v-body">
+                                    <b>الزيارة الثالثة</b>
+                                    <p>تحسّن ملحوظ في جودة النوم. المريض أكثر قدرة على مواجهة المذكّرات. تمت مراجعة السجل والرسوم البيانية معًا، وتحديد موعد الجلسة القادمة.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="patient-actions">
+                    <a class="btn-back" href="payment.html">→ رجوع</a>
+                    <button class="btn-save ghost2" id="savePatientBtn">💾 حفظ في قائمة المرضى</button>
+                    <a class="btn-save ghost2" href="charts.html" id="patientChartsBtn">📊 رسوم هذا الملف</a>
+                    <button class="btn-save" id="startDiagBtn">حفظ الملف وبدء التشخيص</button>
+                </div>
+
+        <div class="note">
+            💡 هذا النموذج مملوء ببيانات تجريبية من طرف المنصة — يمكنك تعديل أي حقل قبل الحفظ. سيُحفظ كل شيء في سجل المريض ويتحدّث مع كل جلسة.
+        </div>
+    </div>
+
+    <div class="patients-modal" id="patientsModal">
+        <div class="pm-box">
+            <div class="pm-head">
+                <h3>👥 قائمة المرضى</h3>
+                <button class="pm-close" id="pmClose">✕</button>
+            </div>
+            <div class="pm-list" id="pmList"></div>
+        </div>
+    </div>
+</div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="#">من نحن</a>
+                <a href="#">مميزات المنصة</a>
+                <a href="#">كيف يعمل</a>
+                <a href="#">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="#">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>window.backendReady.then(() => {
+
+        const DEFAULT_PATIENTS = [
+            {
+                name: 'محمد عبد الله', phone: '0550 12 34 56', birth: '15/03/1998', age: '28 سنة',
+                sex: 'ذكر', marital: 'أعزب', edu: 'جامعي', job: 'معلم', address: 'الجزائر العاصمة، الجزائر',
+                email: 'mohamed.eljems@gmail.com', fileNum: 'PT-2026-0135', tag: 'اضطراب ما بعد الصدمة',
+                reason: 'تعرض لصدمة نفسية مؤخرًا، ويعاني من مشاعر وذكريات متعلقة بها كالقلق الشديد والاسترجاع المتكرر للموقف الصادم، مع صعوبة في النوم والتركيز.',
+                notes: 'لا تاريخ سابق للأمراض النفسية — أول استشارة على المنصة. يُلاحظ تجنب المواقف المذكّرة بالحادث، وتراجع الاهتمام بالأنشطة اليومية منذ ثلاثة أسابيع.',
+                visit: 'حضر المريض في الموعد وبدا متعاونًا. تم بناء علاقة تواصل أولية وشرح آلية المنصة، ووافق على المتابعة الأسبوعية.'
+            },
+            {
+                name: 'أسماء بن علي', phone: '0661 98 45 32', birth: '22/09/2002', age: '24 سنة',
+                sex: 'أنثى', marital: 'عزباء', edu: 'جامعي', job: 'طالبة', address: 'وهران، الجزائر',
+                email: 'asma.benali@gmail.com', fileNum: 'PT-2026-0136', tag: 'اكتئاب (MDD)',
+                reason: 'أعراض اكتئابية: حزن مستمر، فقدان المتعة، انسحاب اجتماعي، وتدهور في الأداء الدراسي منذ عدة أشهر.',
+                notes: 'بكاء متكرر واضطرابات نوم وشهية. رفضت الفكرة الانتحارية لكنها تعبّرت عن يأس. يُنصح بجلسات دعم نفسي ومتابعة أسبوعية.',
+                visit: 'أبدت المريضة تعاونًا رغم انخفاض الطاقة. تم الاستماع العميق ووضع خطة دعم أولية بجلسات أسبوعية.'
+            },
+            {
+                name: 'خالد مرابط', phone: '0770 44 21 09', birth: '03/05/1991', age: '35 سنة',
+                sex: 'ذكر', marital: 'متزوج', edu: 'متوسط', job: 'سائق', address: 'قسنطينة، الجزائر',
+                email: 'khalid.merabet@gmail.com', fileNum: 'PT-2026-0137', tag: 'قلق عام (GAD)',
+                reason: 'قلق مفرط ومستمر حول العمل والعائلة، مع توتر عضلي وأرق واضطراب في التركيز.',
+                notes: 'يشكو من قلق يومي منذ أكثر من سنة دون سبب محدد. تملكه شكوك متكررة حول صحته. يُنصح بفحص سريري وتقنيات استرخاء.',
+                visit: 'بدا المريض متوترًا وعصبيًا. تم شرح تقنيات التنفس العميق ووضع خطة لمواجهة الأفكار المقلقة.'
+            },
+            {
+                name: 'فاطمة الزهراء حمداني', phone: '0555 77 66 11', birth: '10/11/1985', age: '41 سنة',
+                sex: 'أنثى', marital: 'متزوجة', edu: 'ابتدائي', job: 'ربة بيت', address: 'سطيف، الجزائر',
+                email: 'fatima.hamdani@gmail.com', fileNum: 'PT-2026-0138', tag: 'نوبات هلع',
+                reason: 'نوبات هلع متكررة مع خفقان وضيق تنفس وشعور بفقدان السيطرة، تظهر فجأة دون مثير واضح.',
+                notes: 'أول نوبة قبل سنة أثناء مناسبة عائلية. تتجنب الأماكن المزدحمة خوفًا من تكرار النوبة. يُنصح بجلسات علاج معرفي سلوكي.',
+                visit: 'وصفت المريضة تفاصيل نوباتها بدقة. تم طمأنتها وشرح آلية النوبة الفسيولوجية وبدء تسجيل المذكّرات اليومية.'
+            },
+            {
+                name: 'يوسف بوقرة', phone: '0699 30 88 77', birth: '14/02/2007', age: '19 سنة',
+                sex: 'ذكر', marital: 'أعزب', edu: 'ثانوي', job: 'طالب', address: 'البليدة، الجزائر',
+                email: 'youssef.boukerra@gmail.com', fileNum: 'PT-2026-0139', tag: 'اضطراب ما بعد الصدمة',
+                reason: 'حالة خوف واسترجاع مستمر بعد تعرضه لحادث مروري، مع نوبات فزع ليلية وصعوبة في العودة إلى الدراسة.',
+                notes: 'يستيقظ مذعورًا عدة مرات في الأسبوع. يرفض ركوب السيارات منذ الحادث. يُنصح ببروتوكول علاجي متخصص للصدمة.',
+                visit: 'أبدى المريض ترددًا في بداية الجلسة ثم فتح عن الحادث. تم بناء الثقة وتحديد أهداف علاجية قصيرة المدى.'
+            },
+            {
+                name: 'نادية شريف', phone: '0771 55 44 33', birth: '27/08/1993', age: '33 سنة',
+                sex: 'أنثى', marital: 'مطلقة', edu: 'جامعي', job: 'محاسبة', address: 'عنابة، الجزائر',
+                email: 'nadia.cheraif@gmail.com', fileNum: 'PT-2026-0140', tag: 'اكتئاب (MDD)',
+                reason: 'شعور بالحزن والفراغ بعد الطلاق، مع خمول، صعوبة في التركيز، وتقلبات في الوزن والشهية.',
+                notes: 'أفكار سلبية عن الذات وتردد في اتخاذ القرارات. لا أفكار انتحارية حالية. يُنصح بمتابعة دوائية استشارية وجلسات دعم.',
+                visit: 'عبّرت المريضة عن مشاعرها بحرية. تم تفريغ الانفعالات وتحديد شبكة دعم اجتماعي قريبة منها.'
+            }
+        ];
+
+        const PKEY = 'diagPatients';
+        const ACTIVE_KEY = 'diagActivePatient';
+        const SLOTS = 5;
+
+        function seedPatients() {
+            const existing = JSON.parse(backendStorage.getItem(PKEY) || 'null');
+            if (existing && existing.length) return existing;
+            const seeded = DEFAULT_PATIENTS.map((p, i) => ({ id: 'p' + (i + 1), ...p }));
+            backendStorage.setItem(PKEY, JSON.stringify(seeded));
+            return seeded;
+        }
+        let patients = seedPatients();
+        let active = JSON.parse(backendStorage.getItem(ACTIVE_KEY) || 'null');
+        const ptKey = base => active ? base + '_' + active.id : base;
+
+        const ptRegistered = document.getElementById('ptRegistered');
+        const ptNew = document.getElementById('ptNew');
+        const pmModal = document.getElementById('patientsModal');
+        const pmList = document.getElementById('pmList');
+        const pmClose = document.getElementById('pmClose');
+        const activeChip = document.getElementById('activeChip');
+
+        function todayStr() {
+            const d = new Date();
+            return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+        }
+        function card() { return document.querySelector('.patient-card'); }
+        function setActive(btn) {
+            ptRegistered.classList.toggle('active', btn === ptRegistered);
+            ptNew.classList.toggle('active', btn === ptNew);
+        }
+        function setActivePatient(idOrNull) {
+            active = idOrNull ? patients.find(p => p.id === idOrNull) || null : null;
+            if (active) backendStorage.setItem(ACTIVE_KEY, JSON.stringify(active));
+            else backendStorage.removeItem(ACTIVE_KEY);
+            if (activeChip) activeChip.textContent = active
+                ? ('المريض النشط: ' + active.name + ' (' + active.fileNum + ')')
+                : 'أدخل بيانات المريض لبدء أول جلسة تشخيص';
+        }
+        function collectForm() {
+            const c = card();
+            const inputs = c.querySelectorAll('input');
+            const selects = c.querySelectorAll('select');
+            const areas = c.querySelectorAll('textarea');
+            return {
+                name: inputs[0].value.trim(), phone: inputs[1].value.trim(), birth: inputs[2].value.trim(),
+                age: inputs[3].value.trim(), sex: selects[0].value, marital: selects[1].value, edu: selects[2].value,
+                job: inputs[4].value.trim(), address: inputs[5].value.trim(), email: inputs[6].value.trim(),
+                reason: areas[0].value.trim(), notes: areas[1].value.trim()
+            };
+        }
+        function clearForm() {
+            const c = card();
+            c.querySelectorAll('input').forEach(i => i.value = '');
+            c.querySelectorAll('textarea').forEach(t => t.value = '');
+            c.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+        }
+        function setOption(select, value) {
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === value || select.options[i].textContent === value) {
+                    select.selectedIndex = i;
+                    return;
+                }
+            }
+        }
+        function fillForm(p) {
+            const c = card();
+            const inputs = c.querySelectorAll('input');
+            const selects = c.querySelectorAll('select');
+            const areas = c.querySelectorAll('textarea');
+            const vals = [p.name, p.phone, p.birth, p.age, p.job, p.address, p.email];
+            inputs.forEach((i, idx) => { if (vals[idx] !== undefined) i.value = vals[idx]; });
+            setOption(selects[0], p.sex);
+            setOption(selects[1], p.marital);
+            setOption(selects[2], p.edu);
+            if (areas[0]) areas[0].value = p.reason || '';
+            if (areas[1]) areas[1].value = p.notes || '';
+            c.querySelector('.p-name').textContent = p.name || 'مريض جديد';
+            c.querySelector('.p-sub').textContent = 'ملف مريض — قابل للتعديل دائمًا';
+            c.querySelector('.file-num').textContent = p.fileNum ? ('ملف رقم: ' + p.fileNum) : '📄 —';
+            const visits = c.querySelector('.visits');
+            if (visits) {
+                visits.innerHTML = '<div class="visit"><span class="v-date">' + todayStr() + '</span>' +
+                    '<div class="v-body"><b>الزيارة الأولى</b><p>' + (p.visit || 'أول استشارة عبر منصة DIAGNO-ASSIST.') + '</p></div></div>';
+            }
+            const prev = c.querySelector('.new-banner');
+            if (prev) prev.remove();
+        }
+        function openNewPatient() {
+            setActivePatient(null);
+            clearForm();
+            const c = card();
+            const prev = c.querySelector('.new-banner');
+            if (prev) prev.remove();
+            const banner = document.createElement('div');
+            banner.className = 'note new-banner';
+            banner.style.cssText = 'border-color:#2563eb; background:#e9f1ff; color:#2563eb; font-weight:700;';
+            banner.textContent = '🆕 ملف مريض جديد — املأ البيانات ثم اضغط "💾 حفظ في قائمة المرضى".';
+            c.querySelector('.patient-body').prepend(banner);
+            c.querySelector('.p-name').textContent = 'مريض جديد';
+            c.querySelector('.p-sub').textContent = 'ملف جديد — غير محفوظ بعد';
+            c.querySelector('.file-num').textContent = '📄 —';
+            setActive(ptNew);
+        }
+        function ensureSaved() {
+            const data = collectForm();
+            if (!data.name) throw 'أدخل اسم المريض أولًا قبل الحفظ.';
+            if (active && active.id) {
+                Object.assign(active, data);
+                if (!active.visit) active.visit = 'أول استشارة عبر منصة DIAGNO-ASSIST.';
+                const i = patients.findIndex(p => p.id === active.id);
+                patients[i] = active;
+                backendStorage.setItem(PKEY, JSON.stringify(patients));
+                setActivePatient(active.id);
+                return active;
+            }
+            const id = 'p' + (patients.length + 1);
+            const maxN = patients.reduce((m, p) => Math.max(m, parseInt(String(p.fileNum || '').replace(/[^\d]/g, '') || 0)), 135);
+            const np = { id: id, ...data, fileNum: 'PT-2026-' + String(maxN + 1).padStart(4, '0'), tag: 'جلسة تشخيص', visit: 'أول استشارة عبر منصة DIAGNO-ASSIST.' };
+            patients.push(np);
+            backendStorage.setItem(PKEY, JSON.stringify(patients));
+            fillForm(np);
+            setActivePatient(id);
+            renderModal();
+            return np;
+        }
+        function hasData(p) {
+            const k = base => p ? base + '_' + p.id : base;
+            return backendStorage.getItem(k('diagTestAnswered')) === '1' ||
+                JSON.parse(backendStorage.getItem(k('diagSessionsV2')) || 'null') !== null ||
+                JSON.parse(backendStorage.getItem(k('diagSessionsMddV2')) || 'null') !== null;
+        }
+        function renderModal() {
+            pmList.innerHTML = '';
+            patients.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'pm-item' + (active && active.id === p.id ? ' active' : '');
+                div.dataset.id = p.id;
+                div.innerHTML = '<div class="pm-name">' + p.name + '</div>' +
+                    '<div class="pm-meta">' + p.age + ' • ' + p.sex + ' • ' + p.marital + '<br>ملف: ' + p.fileNum + '</div>' +
+                    '<span class="pm-tag">' + (p.tag || 'جلسة تشخيص') + '</span>' +
+                    (hasData(p) ? '<br><span class="pm-tag" style="background:#e6faf4;color:#15803d;">📁 اختبار + رسوم</span>' : '');
+                pmList.appendChild(div);
+            });
+            for (let i = 0; i < SLOTS; i++) {
+                const div = document.createElement('div');
+                div.className = 'pm-item slot';
+                div.dataset.slot = i;
+                div.innerHTML = '<span class="plus">＋</span><span class="slot-txt">خانة شاغرة — مريض جديد</span>';
+                pmList.appendChild(div);
+            }
+        }
+
+        ptRegistered.addEventListener('click', () => {
+            setActive(ptRegistered);
+            location.reload();
+        });
+        ptNew.addEventListener('click', openNewPatient);
+
+        function openPatientsList() {
+            renderModal();
+            pmModal.classList.add('show');
+        }
+        document.getElementById('patientsListBtn').addEventListener('click', openPatientsList);
+        document.getElementById('patientsListBtn2').addEventListener('click', openPatientsList);
+        pmClose.addEventListener('click', () => pmModal.classList.remove('show'));
+        pmModal.addEventListener('click', e => {
+            if (e.target === pmModal) pmModal.classList.remove('show');
+        });
+        pmList.addEventListener('click', e => {
+            const item = e.target.closest('.pm-item');
+            if (!item) return;
+            if (item.dataset.id) {
+                const p = patients.find(x => x.id === item.dataset.id);
+                if (p) { fillForm(p); setActivePatient(p.id); setActive(ptRegistered); }
+            } else if (item.dataset.slot !== undefined) {
+                openNewPatient();
+            }
+            pmModal.classList.remove('show');
+        });
+
+        document.getElementById('savePatientBtn').addEventListener('click', () => {
+            try {
+                const p = ensureSaved();
+                alert('✓ تم حفظ الملف — ملف رقم: ' + p.fileNum + ' — وهو الآن الملف النشط.');
+            } catch (e) { alert(e); }
+        });
+        document.getElementById('startDiagBtn').addEventListener('click', () => {
+            try { ensureSaved(); } catch (e) { alert(e); return; }
+            location.href = 'diagnosis.html';
+        });
+
+        if (active && patients.some(p => p.id === active.id)) {
+            fillForm(active);
+            setActive(ptRegistered);
+        }
+        setActivePatient(active && active.id ? active.id : null);
+
+        (function () {
+            const btn = document.querySelector('.nav-actions .btn-purple');
+            if (!btn) return;
+            const u = JSON.parse(backendStorage.getItem('diagUser') || 'null');
+            if (u) {
+                btn.innerHTML = (u.isAdmin ? '👨‍💼' : '👤') + ' ' + (u.isAdmin ? 'المدير' : u.name);
+                btn.style.background = '#e9f1ff';
+                btn.style.color = '#2563eb';
+                btn.style.border = '1.5px solid #2563eb';
+                btn.onclick = () => {
+                    if (confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+                        backendLogout();
+                    }
+                };
+            } else {
+                btn.onclick = () => { location.href = 'login.html'; };
+            }
+        })();
+    
+});</script>
+
+</body>
+</html>

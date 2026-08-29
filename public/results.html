@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتيجة التحليل | DIAGNO-ASSIST</title>
+    <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #fafcff;
+            color: #12294e;
+            min-height: 100vh;
+        }
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+        }
+        .blob-1 { width: 420px; height: 420px; background: #c8daff; top: -120px; left: -100px; }
+        .blob-2 { width: 380px; height: 380px; background: #b8ecd8; bottom: -100px; right: -80px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .nav-brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .nav-brand .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+        .nav-brand .brand-name { font-size: 19px; font-weight: 800; color: #12294e; letter-spacing: 1px; }
+        .nav-brand .brand-sub { font-size: 11px; color: #7f92b5; font-weight: 600; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            text-decoration: none;
+            color: #41547f;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #2563eb; }
+        .nav-links a .ico { font-size: 16px; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-purple {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+        }
+        .btn-purple:hover { transform: translateY(-2px); }
+
+        .crumb {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 40px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #93a6c9;
+            font-size: 14px;
+        }
+        .crumb a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .crumb .sep { color: #c8daff; }
+
+        .res-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 40px 60px;
+        }
+        .res-title { text-align: center; margin-bottom: 26px; }
+        .res-title h1 { font-size: 32px; color: #12294e; margin-bottom: 8px; }
+        .res-title h1 .grad {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .res-title p { color: #5c6f96; font-size: 15px; }
+
+        .patient-strip {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 16px;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 26px;
+            flex-wrap: wrap;
+        }
+        .patient-strip .p-avatar {
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            font-weight: 800;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .patient-strip .p-info b { font-size: 16px; color: #12294e; }
+        .patient-strip .p-info span { font-size: 13px; color: #7f92b5; }
+        .patient-strip .p-date { margin-right: auto; font-size: 13px; color: #7f92b5; direction: ltr; }
+
+        .main-diag {
+            background: linear-gradient(135deg, #12294e, #2563eb);
+            border-radius: 22px;
+            padding: 30px;
+            color: #fff;
+            margin-bottom: 26px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .main-diag .md-circle {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 6px solid #60a5fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .main-diag .md-circle b { font-size: 30px; }
+        .main-diag .md-circle small { font-size: 12px; color: #c8daff; }
+        .main-diag .md-text h2 { font-size: 26px; margin-bottom: 8px; }
+        .main-diag .md-text p { color: #c8daff; font-size: 14px; line-height: 1.8; }
+        .main-diag .md-badge {
+            margin-top: 12px;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .differential {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 22px;
+            padding: 26px;
+            margin-bottom: 26px;
+        }
+        .differential h3 {
+            font-size: 19px;
+            color: #12294e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .diag-row {
+            border: 2px solid #2563eb;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+        }
+        .diag-row .d-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 7px;
+        }
+        .diag-row .d-name { font-weight: 800; font-size: 15px; color: #12294e; }
+        .diag-row .d-name .rank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            margin-left: 8px;
+        }
+        .diag-row .d-per { font-weight: 800; font-size: 15px; color: #2563eb; }
+        .diag-row .d-bar {
+            height: 10px;
+            background: #e9f1ff;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .diag-row .d-bar i {
+            display: block;
+            height: 100%;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #2563eb, #60a5fa);
+            animation: growBar 1.2s ease-out forwards;
+            width: 0;
+        }
+        @keyframes growBar { from { width: 0; } }
+        .diag-row .d-text { font-size: 13px; color: #7f92b5; margin-top: 6px; line-height: 1.7; }
+        .kw-box { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .kw-chip {
+            background: #e9f1ff; color: #2563eb;
+            border-radius: 16px; padding: 5px 14px;
+            font-size: 12.5px; font-weight: 700;
+        }
+        .diff-head {
+            font-size: 16px; color: #12294e; margin: 22px 0 14px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .diff-item {
+            background: #fafcff; border: 1px solid #e3ecfe;
+            border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+        }
+        .diff-item .d-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+        .diff-item .d-name { font-weight: 700; font-size: 14px; color: #41547f; }
+        .diff-item .d-name .rank {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #e9f1ff; color: #2563eb;
+            font-size: 11.5px; font-weight: 800; margin-left: 8px;
+        }
+        .diff-item .d-per { font-weight: 800; color: #7f92b5; font-size: 13.5px; }
+        .diff-item .d-bar { height: 8px; background: #e9f1ff; border-radius: 6px; overflow: hidden; }
+        .diff-item .d-bar i {
+            display: block; height: 100%; width: 0; border-radius: 6px;
+            background: linear-gradient(90deg, #93a6c9, #c8daff);
+            animation: growBar 1.2s ease-out forwards;
+        }
+        .diff-item .d-text { font-size: 12.5px; color: #7f92b5; margin-top: 5px; line-height: 1.6; }
+        .other-note {
+            margin-top: 14px; font-size: 13px; color: #7f92b5;
+            background: #fafcff; border: 1px dashed #c8daff;
+            border-radius: 12px; padding: 10px 16px; line-height: 1.8;
+        }
+        .other-note b { color: #41547f; }
+
+        .criteria {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 22px;
+            padding: 26px;
+            margin-bottom: 26px;
+        }
+        .criteria h3 { font-size: 19px; color: #12294e; margin-bottom: 16px; }
+        .criteria .c-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e3ecfe;
+            font-size: 14px;
+            color: #41547f;
+        }
+        .criteria .c-item:last-child { border-bottom: none; }
+        .criteria .c-check {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: #dff6e8;
+            color: #15803d;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .criteria .c-item b { color: #12294e; }
+
+        .res-actions { display: flex; gap: 14px; }
+        .btn-page {
+            flex: 1;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 13px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .btn-page:hover { transform: translateY(-2px); }
+        .btn-page.dim { opacity: 0.5; pointer-events: none; }
+        .chart-hint {
+            margin-top: 12px; font-size: 12.5px; color: #92600a;
+            background: #fdf6e3; border: 1px solid #f5d47a;
+            border-radius: 10px; padding: 10px 16px; line-height: 1.7;
+        }
+        .btn-ghost-page {
+            background: #fff;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 30px;
+            border-radius: 13px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .disclaimer {
+            margin-top: 18px;
+            background: #fdf6e3;
+            border: 1px solid #f5d47a;
+            border-radius: 12px;
+            padding: 13px 18px;
+            font-size: 13px;
+            color: #92600a;
+            line-height: 1.8;
+        }
+
+        .choose-test {
+            background: linear-gradient(135deg, #eef4ff, #fdf6e3);
+            border: 2px solid #2563eb;
+            border-radius: 22px;
+            padding: 26px;
+            margin-bottom: 26px;
+            text-align: center;
+        }
+        .choose-test h3 {
+            font-size: 19px;
+            color: #12294e;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .choose-test .sel-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .choose-test .sel-opt {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #41547f;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .choose-test .sel-opt:hover { border-color: #2563eb; transform: translateY(-2px); }
+        .choose-test .sel-opt.sel {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+        }
+        .btn-test {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 14px 44px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+        }
+        .btn-test:hover { transform: translateY(-2px); }
+        .btn-test.dim { opacity: 0.5; pointer-events: none; }
+
+        .no-box {
+            text-align: center;
+            background: #fff;
+            border: 2px dashed #c8daff;
+            border-radius: 22px;
+            padding: 50px 20px;
+            margin-bottom: 26px;
+        }
+        .no-box .big-ico { font-size: 46px; display: block; margin-bottom: 12px; }
+        .no-box p { color: #5c6f96; font-size: 15px; margin-bottom: 20px; }
+
+        footer {
+            background: #12294e;
+            color: #c8daff;
+            margin-top: 20px;
+        }
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 44px 50px 30px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 34px;
+        }
+        .footer-col h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+        .footer-col a {
+            display: block;
+            color: #b3a4d9;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: #fff; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .footer-brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .footer-brand .brand-name { color: #fff; font-weight: 800; letter-spacing: 1px; }
+        .footer-brand .brand-sub { display: block; font-size: 11px; color: #b3a4d9; margin-top: 2px; }
+        .footer-col p { font-size: 14px; line-height: 1.8; color: #c8daff; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding: 18px;
+            color: #7f92b5;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .res-wrap { padding: 24px 18px 40px; }
+            nav { padding: 14px 18px; }
+            .nav-links { display: none; }
+            .crumb { padding: 16px 18px 0; }
+            .footer-grid { grid-template-columns: 1fr 1fr; padding: 30px 18px; }
+            .main-diag { padding: 22px; }
+            .res-actions { flex-direction: column; }
+        }
+    </style>
+    <link rel="stylesheet" href="site-ui.css" data-diagnoassist-ui="v2">
+    <script src="backend-storage.js"></script>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav>
+        <a class="nav-brand" href="index.html">
+            <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico">🏠</span> الرئيسية</a>
+            <a href="#"><span class="ico">🔬</span> كيف يعمل</a>
+            <a href="#"><span class="ico">🩺</span> المميزات</a>
+            <a href="#"><span class="ico">💰</span> الأسعار</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-purple">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <div class="crumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="sep">‹</span>
+        <a href="pricing.html">الأسعار</a>
+        <span class="sep">‹</span>
+        <a href="payment.html">الدفع</a>
+        <span class="sep">‹</span>
+        <a href="patient.html">ملف المريض</a>
+        <span class="sep">‹</span>
+        <a href="diagnosis.html">التشخيص</a>
+        <span class="sep">‹</span>
+        <span>النتيجة</span>
+    </div>
+
+    <div class="res-wrap">
+        <div class="res-title">
+            <h1>نتيجة <span class="grad">التحليل</span></h1>
+            <p>اختيار تلقائي لاضطراب واحد فقط بعد قراءة الأعراض المدخلة</p>
+        </div>
+
+        <div class="no-box" id="noResult" style="display:none;">
+            <span class="big-ico">📭</span>
+            <p>لا توجد نتيجة بعد — أدخل أعراض المريض أولًا من صفحة التشخيص.</p>
+            <a class="btn-page" href="diagnosis.html" style="display:inline-block; padding:12px 36px;">→ الذهاب للتشخيص</a>
+        </div>
+
+        <div id="resContent">
+            <div class="patient-strip">
+                <div class="p-avatar">م</div>
+                <div class="p-info">
+                    <b>محمد عبد الله</b><br>
+                    <span>28 سنة — ذكر — جامعي — معلم</span>
+                </div>
+                <div class="p-date" id="resDate">—</div>
+            </div>
+
+            <div class="main-diag">
+                <div class="md-circle">
+                    <b id="mdPct">—</b>
+                    <small>التطابق</small>
+                </div>
+                <div class="md-text">
+                    <h2 id="mdName">—</h2>
+                    <p id="mdDesc">—</p>
+                    <span class="md-badge" id="mdBadge">—</span>
+                </div>
+            </div>
+
+            <div class="differential">
+                <h3>🧠 التشخيص المختار تلقائيًا (اضطراب واحد فقط)</h3>
+                <div class="diag-row">
+                    <div class="d-top">
+                        <span class="d-name"><span class="rank">✓</span><span id="wName">—</span></span>
+                        <span class="d-per" id="wPct">—</span>
+                    </div>
+                    <div class="d-bar"><i id="wBar" style="width:0%"></i></div>
+                    <div class="d-text" id="wText">—</div>
+                    <div class="kw-box" id="wKw"></div>
+                </div>
+                <div id="diffList"></div>
+                <div class="other-note" id="otherNote"></div>
+            </div>
+
+            <div class="choose-test">
+                <h3>🧪 الرجاء اختيار الاضطراب المراد تطبيق اختباره (المختار تلقائيًا + زمرته المشابهة)</h3>
+                <div class="sel-list" id="selList"></div>
+                <a class="btn-test" href="test.html" id="testLink">تطبيق الاختبار ←</a>
+            </div>
+
+            <div class="res-actions">
+                <a class="btn-ghost-page" href="diagnosis.html">→ رجوع للتشخيص</a>
+                <a class="btn-page dim" href="charts.html" id="chartsLink">📊 حفظ في الملف وعرض الرسوم</a>
+            </div>
+            <div class="chart-hint" id="chartHint" style="display:none;">
+                🔒 زر الرسوم البيانية مقفول — يجب إكمال الاختبار وحفظ الملف أولًا من صفحة الاختبار.
+            </div>
+
+            <div class="disclaimer">
+                ⚠️ هذه النتيجة استرشادية مبنية على مطابقة الكلمات المفتاحية للأعراض المدخلة ولا تُغني عن التقييم السريري من طرف أخصائي الصحة النفسية.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="#">من نحن</a>
+                <a href="#">مميزات المنصة</a>
+                <a href="#">كيف يعمل</a>
+                <a href="#">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="#">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>window.backendReady.then(() => {
+
+        const DIFF = {
+            ptsd: [
+                { name: 'اضطراب الإجهاد الحاد (ASD)', pct: 72, text: 'نفس الأعراض لكن خلال شهر واحد فقط من التعرض للحدث الصادم.' },
+                { name: 'اضطراب القلق العام (GAD)', pct: 64, text: 'تيقظ مبالغ فيه، قلق، صعوبة التركيز والنوم دون صدمة محددة.' },
+                { name: 'اضطراب الهلع', pct: 46, text: 'تفاعلات فيزيولوجية حادة وسلوك تجنبي للمواقف المخيفة.' },
+                { name: 'اضطراب الشخصية الحدّية (BPD)', pct: 38, text: 'انفصال عاطفي، غضب، تهور، تقلب المشاعر المستقر منذ الصغر.' },
+                { name: 'اضطراب الوسواس القهري (OCD)', pct: 31, text: 'أفكار متطفلة متكررة ومستمرة دون رابط بحادث صادم.' }
+            ],
+            mdd: [
+                { name: 'اضطراب ثنائي القطب (النوع الثاني)', pct: 62, text: 'نوبات اكتئاب متناوبة مع نوبات هوس خفيف (تحت هوس).' },
+                { name: 'اضطراب الاكتئاب المستمر (الجزئي)', pct: 55, text: 'مزاج مكتئب مزمن لسنتين أو أكثر بأعراض أخف شدة.' },
+                { name: 'اضطراب التكيف مع كآبة', pct: 48, text: 'كآبة لاحقة لضغط نفسي محدد، أقصر مدة وأقل شدة.' },
+                { name: 'اضطراب القلق العام (GAD)', pct: 44, text: 'قلق وتوتر مترافق مع أعراض جسدية دون مزاج مكتئب سائد.' },
+                { name: 'اكتئاب ناتج عن مادة أو حالة طبية', pct: 36, text: 'أعراض اكتئاب سببها مباشرةً تعاطي مادة أو مرض جسدي.' }
+            ]
+        };
+
+        const AP = JSON.parse(backendStorage.getItem('diagActivePatient') || 'null');
+        const ptKey = base => AP ? base + '_' + AP.id : base;
+
+        const res = JSON.parse(backendStorage.getItem(ptKey('diagResult')) || 'null');
+
+        const chartsLink = document.getElementById('chartsLink');
+        const chartHint = document.getElementById('chartHint');
+        if (backendStorage.getItem(ptKey('diagTestAnswered')) === '1') {
+            chartsLink.classList.remove('dim');
+            chartHint.style.display = 'none';
+        } else {
+            chartsLink.classList.add('dim');
+            chartHint.style.display = 'block';
+        }
+
+        if (!res || !res.winner) {
+            document.getElementById('noResult').style.display = 'block';
+            document.getElementById('resContent').style.display = 'none';
+        } else {
+            const w = res.winner;
+            document.getElementById('resDate').textContent = res.date || '';
+            document.getElementById('mdPct').textContent = w.pct + '%';
+            document.getElementById('mdName').textContent = w.ico + ' ' + w.name;
+            document.getElementById('mdDesc').textContent =
+                'تم اختيار هذا الاضطراب تلقائيًا لكونه الأعلى تطابقًا مع الكلمات المفتاحية المكتشفة في الأعراض المدخلة (' +
+                w.matched + ' من أصل ' + w.total + ' مجموعة أعراض).';
+            document.getElementById('mdBadge').textContent = '✅ الاضطراب المختار — تجاوز العتبة المطلوبة (' + w.min + ' مجموعات)';
+
+            document.getElementById('wName').textContent = w.name;
+            document.getElementById('wPct').textContent = w.pct + '%';
+            document.getElementById('wBar').style.width = w.pct + '%';
+            document.getElementById('wText').textContent =
+                'حضور ' + w.matched + ' مجموعات أعراض من أصل ' + w.total + ' — التطابق ' + w.pct + '% حسب الكلمات المفتاحية.';
+            document.getElementById('wKw').innerHTML =
+                (w.labels || []).map(l => '<span class="kw-chip">✓ ' + l + '</span>').join('');
+
+            const diffList = document.getElementById('diffList');
+            const diffs = DIFF[res.winner.id] || [];
+            diffList.innerHTML =
+                '<h3 class="diff-head">🔬 التشخيص الفارقي: اضطرابات مشابهة لـ "' + w.name + '" (مرتبة تنازليًا — دون خلط مع الاضطراب الآخر)</h3>' +
+                diffs.map((d, i) =>
+                    '<div class="diff-item">' +
+                    '<div class="d-top">' +
+                    '<span class="d-name"><span class="rank">' + (i + 1) + '</span>' + d.name + '</span>' +
+                    '<span class="d-per">' + d.pct + '%</span>' +
+                    '</div>' +
+                    '<div class="d-bar"><i style="animation-duration:1.1s; width:' + d.pct + '%"></i></div>' +
+                    '<div class="d-text">' + d.text + '</div>' +
+                    '</div>'
+                ).join('') ||
+                '<div class="diff-item"><div class="d-text">لا توجد قائمة فارقية محفوظة لهذا الاضطراب.</div></div>';
+
+            if (res.other) {
+                document.getElementById('otherNote').innerHTML =
+                    'لم يُختر الاضطراب الآخر (<b>' + res.other.name + '</b>) لأنه الأقل تطابقًا: <b>' +
+                    res.other.pct + '%</b> (' + res.other.matched + ' / ' + res.other.total + ' مجموعات).';
+            } else {
+                document.getElementById('otherNote').textContent = 'الاضطراب الآخر لم يبلغ عتبة التطابق المطلوبة.';
+            }
+
+            const selList = document.getElementById('selList');
+            const opts = [];
+            if (res.winner) opts.push({ id: res.winner.id, name: res.winner.name, sel: true });
+            (DIFF[res.winner.id] || []).forEach(d => {
+                opts.push({ id: 'diff', name: d.name, sel: false });
+            });
+            selList.innerHTML = opts.map(o =>
+                '<div class="sel-opt' + (o.sel ? ' sel' : '') + '" data-id="' + o.id + '">' +
+                (o.sel ? '⭐ ' : '') + o.name + '</div>'
+            ).join('');
+            const testLink = document.getElementById('testLink');
+            selList.querySelectorAll('.sel-opt').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    selList.querySelectorAll('.sel-opt').forEach(o => {
+                        o.classList.remove('sel');
+                        o.innerHTML = o.innerHTML.replace(/^⭐ /, '');
+                    });
+                    opt.classList.add('sel');
+                    opt.innerHTML = '⭐ ' + opt.innerHTML;
+                    testLink.classList.remove('dim');
+                });
+            });
+            testLink.addEventListener('click', e => {
+                const sel = selList.querySelector('.sel-opt.sel');
+                if (!sel || sel.dataset.id === 'diff') {
+                    e.preventDefault();
+                    alert('لا يوجد اختبار مطبّق لهذا الاضطراب على المنصة حاليًا — اختر أحد الاضطرابين الأساسيين (اضطراب ما بعد الصدمة أو الاكتئاب MDD).');
+                    return;
+                }
+                backendStorage.setItem(ptKey('chosenTest'), sel.dataset.id);
+            });
+        }
+    
+});</script>
+
+    <script>window.backendReady.then(() => {
+
+        (function () {
+            const btn = document.querySelector('.nav-actions .btn-purple');
+            if (!btn) return;
+            const u = JSON.parse(backendStorage.getItem('diagUser') || 'null');
+            if (u) {
+                btn.innerHTML = (u.isAdmin ? '👨‍💼' : '👤') + ' ' + (u.isAdmin ? 'المدير' : u.name);
+                btn.style.background = '#e9f1ff';
+                btn.style.color = '#2563eb';
+                btn.style.border = '1.5px solid #2563eb';
+                btn.onclick = () => {
+                    if (confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+                        backendLogout();
+                    }
+                };
+            } else {
+                btn.onclick = () => { location.href = 'login.html'; };
+            }
+        })();
+    
+});</script>
+
+</body>
+</html>

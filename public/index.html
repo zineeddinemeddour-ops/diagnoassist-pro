@@ -1,0 +1,594 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دياجنو أسيست | نسخة 3</title>
+    <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #fafcff;
+            color: #12294e;
+            min-height: 100vh;
+        }
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+        }
+        .blob-1 { width: 420px; height: 420px; background: #c8daff; top: -120px; left: -100px; }
+        .blob-2 { width: 380px; height: 380px; background: #b8ecd8; bottom: -100px; right: -80px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .nav-brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .nav-brand .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+        .nav-brand .brand-name { font-size: 19px; font-weight: 800; color: #12294e; letter-spacing: 1px; }
+        .nav-brand .brand-sub { font-size: 11px; color: #7f92b5; font-weight: 600; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            text-decoration: none;
+            color: #41547f;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #2563eb; }
+        .nav-links a .ico { font-size: 16px; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-light {
+            background: none;
+            border: none;
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 9px 18px;
+        }
+        .btn-purple {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-purple:hover { transform: translateY(-2px); }
+
+        .hero {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 50px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        .hero h1 {
+            font-size: 44px;
+            line-height: 1.35;
+            font-weight: 800;
+            color: #12294e;
+            margin-bottom: 6px;
+        }
+        .badge {
+            display: inline-block;
+            background: #e9f1ff;
+            border: 1px solid #c8daff;
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 7px 16px;
+            border-radius: 24px;
+            margin-bottom: 18px;
+        }
+        .hero h1 .grad {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 18px;
+            line-height: 1.9;
+            color: #5c6f96;
+            margin: 18px 0 28px;
+        }
+        .hero-btns { display: flex; gap: 14px; }
+        .btn-outline {
+            background: #fff;
+            color: #2563eb;
+            border: 2px solid #dbe7fe;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .btn-outline:hover { border-color: #2563eb; }
+        .hero-trust { margin-top: 26px; display: flex; gap: 28px; }
+        .hero-trust div { text-align: center; }
+        .hero-trust .n { font-size: 22px; font-weight: 800; color: #2563eb; }
+        .hero-trust .l { font-size: 13px; color: #7f92b5; }
+
+.app-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 24px 60px rgba(37, 99, 235, 0.16);
+            border: 1px solid #e3ecfe;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 430px;
+            width: 100%;
+            animation: waveMove 2.2s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+        .app-card:hover { animation-play-state: paused; }
+        .hero-side { position: relative; display: flex; justify-content: center; }
+        .hero-psych {
+            position: absolute;
+            top: -26px;
+            right: 30px;
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            padding: 18px;
+            box-shadow: 0 10px 28px rgba(37, 99, 235, 0.4);
+            animation: waveMove 2.2s ease-in-out infinite;
+            animation-delay: 1.5s;
+            z-index: 2;
+        }
+        .hero-psych img { width: 100%; height: 100%; }
+.app-top {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            padding: 16px 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-top .app-logo { width: 30px; height: 30px; }
+        .app-top { font-weight: 800; color: #fff; font-size: 15px; }
+.app-body { padding: 22px; }
+        .app-qa { margin-bottom: 14px; }
+        .mini-q {
+            background: #fafcff;
+            border: 2px solid #e3ecfe;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 13.5px;
+            color: #12294e;
+            opacity: 0;
+            animation: qaIn 0.7s ease-out forwards;
+        }
+        .mini-q:nth-child(1) { animation-delay: 0s; }
+        .mini-q:nth-child(2) { animation-delay: 0.5s; }
+        .mini-q:nth-child(3) { animation-delay: 1s; }
+        .mini-q .mini-q-n {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            margin-left: 7px;
+        }
+        .mini-q small {
+            display: block;
+            font-weight: 400;
+            color: #5c6f96;
+            margin-top: 5px;
+            line-height: 1.6;
+            font-size: 12px;
+        }
+        @keyframes qaIn {
+            0% { opacity: 0; transform: translateY(24px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .result-box {
+            background: linear-gradient(135deg, #e9f1ff, #e6faf4);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 14px;
+        }
+        .result-box .tag {
+            display: inline-block;
+            background: #2563eb;
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .result-box p { color: #41577f; font-size: 14px; line-height: 1.8; }
+
+        .steps {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 60px 50px;
+        }
+        .steps-title { text-align: center; margin-bottom: 40px; }
+        .steps-title h2 { font-size: 30px; color: #12294e; margin-bottom: 8px; }
+        .steps-title p { color: #7f92b5; }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+        .step {
+            background: #fff;
+            border: 1px solid #e3ecfe;
+            border-radius: 18px;
+            padding: 26px;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .step:hover { transform: translateY(-6px); }
+        .step:nth-child(1)::after,
+        .step:nth-child(2)::after,
+        .step:nth-child(4)::after,
+        .step:nth-child(5)::after {
+            content: "◀";
+            position: absolute;
+            left: -27px;
+            top: 34px;
+            font-size: 26px;
+            color: #9db8f5;
+            z-index: 1;
+            pointer-events: none;
+            text-shadow: 0 0 6px rgba(37, 99, 235, 0.25);
+        }
+        .step .ico {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #e9f1ff, #e6faf4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 16px;
+            position: relative;
+            animation: waveMove 2.2s ease-in-out infinite;
+        }
+        .step:nth-child(1) .ico { animation-delay: 0s; }
+        .step:nth-child(2) .ico { animation-delay: 0.25s; }
+        .step:nth-child(3) .ico { animation-delay: 0.5s; }
+        .step:nth-child(4) .ico { animation-delay: 0.75s; }
+        .step:nth-child(5) .ico { animation-delay: 1s; }
+        .step:nth-child(6) .ico { animation-delay: 1.25s; }
+        .step:hover .ico { animation-play-state: paused; }
+        @keyframes waveMove {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-14px); }
+        }
+        .step .num-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.4);
+        }
+        .step h3 { font-size: 18px; color: #12294e; margin-bottom: 8px; }
+        .step p { color: #5c6f96; line-height: 1.7; font-size: 15px; }
+
+        .cta-box {
+            background: linear-gradient(135deg, #12294e, #2563eb);
+            border-radius: 24px;
+            padding: 44px;
+            text-align: center;
+            color: #fff;
+        }
+        .cta-box h2 { font-size: 28px; margin-bottom: 10px; }
+        .cta-box p { color: #c8daff; margin-bottom: 24px; }
+        .btn-white {
+            background: #fff;
+            color: #2563eb;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-white:hover { transform: translateY(-2px); }
+
+        footer {
+            background: #12294e;
+            color: #c8daff;
+            margin-top: 40px;
+        }
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 44px 50px 30px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 34px;
+        }
+        .footer-col h4 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        .footer-col a {
+            display: block;
+            color: #b3a4d9;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: #fff; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .footer-brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .footer-brand .brand-name { color: #fff; font-weight: 800; letter-spacing: 1px; }
+        .footer-brand .brand-sub { display: block; font-size: 11px; color: #b3a4d9; margin-top: 2px; }
+        .footer-col p { font-size: 14px; line-height: 1.8; color: #b3a4d9; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding: 18px;
+            color: #7f92b5;
+            font-size: 13px;
+        }
+        @media (max-width: 850px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; padding: 30px 18px; }
+            .footer-bottom { font-size: 12px; }
+        }
+
+        @media (max-width: 850px) {
+            .hero { grid-template-columns: 1fr; padding: 20px 18px; text-align: center; }
+            .hero h1 { font-size: 30px; }
+            .hero-btns { justify-content: center; flex-wrap: wrap; }
+            .hero-trust { justify-content: center; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .step:not(:last-child)::after {
+                content: "▼";
+                left: 50%;
+                right: auto;
+                top: auto;
+                bottom: -28px;
+                transform: translateX(-50%);
+                font-size: 24px;
+            }
+            .steps,         .cta { padding: 40px 18px; }
+            nav { padding: 14px 18px; }
+            .nav-links { display: none; }
+        }
+    </style>
+    <link rel="stylesheet" href="site-ui.css" data-diagnoassist-ui="v2">
+    <script src="backend-storage.js"></script>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav>
+        <a class="nav-brand" href="#">
+            <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="#"><span class="ico">🏠</span> الرئيسية</a>
+            <a href="#"><span class="ico">🔬</span> كيف يعمل</a>
+            <a href="#"><span class="ico">🩺</span> المميزات</a>
+            <a href="#"><span class="ico">💰</span> الأسعار</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-purple">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div>
+            <div class="badge">منصة رقمية لأخصائي الصحة النفسية</div>
+            <h1>تشخيص مساعد، اختبارات موثوقة،<br><span class="grad">تتبع شامل</span> — في نظام واحد</h1>
+            <p>من الأعراض إلى التشخيص الفارقي إلى الاختبار والنتائج — كل خطوة تتم على المنصة. كل ذلك محفوظ في السجل ويتحدّث الملف في كل جلسة.</p>
+<div class="hero-btns">
+                <a class="btn-purple" href="login.html">جرب التشخيص الآن</a>
+                <button class="btn-outline">شاهد كيف يعمل</button>
+            </div>
+            <div class="hero-trust">
+                <div><div class="n">500K+</div><div class="l">مستخدم</div></div>
+<div><div class="n">96%</div><div class="l">رضا المستخدمين</div></div>
+            </div>
+        </div>
+
+<div class="hero-side">
+            <div class="hero-psych">
+                <img src="psychologist.svg" alt="غصن الصحة النفسية">
+            </div>
+            <div class="app-card">
+                <div class="app-top">
+                    Q&A أسئلة شائعة
+                </div>
+                <div class="app-body">
+                    <div class="app-qa">
+                        <div class="mini-q">
+                            <span class="mini-q-n">1</span>
+                            كم عدد الاختبارات الموجودة على المنصة؟
+                            <small>أكثر من 25 اختبارًا نفسيًا معتمدًا، وتُضاف اختبارات جديدة باستمرار.</small>
+                        </div>
+                        <div class="mini-q">
+                            <span class="mini-q-n">2</span>
+                            هل تعتمدون على التحديثات الجديدة لـ DSM-5-TR و ICD-11؟
+                            <small>نعم، نعتمد أحدث إصدارات الدليل التشخيصي والتصنيف الدولي، ونحدّث القاعدة دوريًا.</small>
+                        </div>
+                        <div class="mini-q">
+                            <span class="mini-q-n">3</span>
+                            هل بيانات مرضاك محمية وسرية؟
+                            <small>بالتأكيد، تُشفّر جميع البيانات وفق أعلى معايير الأمان ولا تُشارك مع أي طرف ثالث.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="steps">
+        <div class="steps-title">
+            <h2>كيف تعمل المنصة؟</h2>
+            <p>ست خطوات متكاملة من الأعراض حتى الحفظ في ملف المريض</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step">
+                <div class="ico"><span class="num-badge">1</span>📝</div>
+                <h3>إدخال الأعراض</h3>
+                <p>سجّل أعراض المريض بسرعة ودقة في نظام موحد وسهل.</p>
+            </div>
+            <div class="step">
+                <div class="ico"><span class="num-badge">2</span>🤖</div>
+                <h3>التشخيص</h3>
+                <p>محرك المنصة يقترح الاضطرابات المحتملة مرتبة حسب الأرجحية.</p>
+            </div>
+            <div class="step">
+                <div class="ico"><span class="num-badge">3</span>🔬</div>
+                <h3>التشخيص الفارقي</h3>
+                <p>قارن بين الاضطرابات المتشابهة للوصول إلى النتيجة الأدق.</p>
+            </div>
+            <div class="step">
+                <div class="ico"><span class="num-badge">4</span>📋</div>
+                <h3>الاختبارات</h3>
+                <p>طبّق الاختبارات المعتمدة مباشرة على المنصة بسهولة.</p>
+            </div>
+            <div class="step">
+                <div class="ico"><span class="num-badge">5</span>📊</div>
+                <h3>نتائج الاختبار</h3>
+                <p>احصل على النتائج والدرجات فورًا بشكل واضح ومفهوم.</p>
+            </div>
+            <div class="step">
+                <div class="ico"><span class="num-badge">6</span>💾</div>
+                <h3>حفظ الملف</h3>
+                <p>يُحفظ كل شيء في ملف المريض ويتحدّث مع كل جلسة.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-box">
+            <h2>مستعد لتجربة التشخيص الذكي؟</h2>
+            <p>أسعار معقولة تناسب الأخصائيين والعيادات</p>
+            <a class="btn-white" href="login.html">ابدأ الآن</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="#">من نحن</a>
+                <a href="#">مميزات المنصة</a>
+                <a href="#">كيف يعمل</a>
+                <a href="#">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="#">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>window.backendReady.then(() => {
+
+        (function () {
+            const btn = document.querySelector('.nav-actions .btn-purple');
+            if (!btn) return;
+            const u = JSON.parse(backendStorage.getItem('diagUser') || 'null');
+            if (u) {
+                btn.innerHTML = (u.isAdmin ? '👨‍💼' : '👤') + ' ' + (u.isAdmin ? 'المدير' : u.name);
+                btn.style.background = '#e9f1ff';
+                btn.style.color = '#2563eb';
+                btn.style.border = '1.5px solid #2563eb';
+                btn.onclick = () => {
+                    if (confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+                        backendLogout();
+                    }
+                };
+            } else {
+                btn.onclick = () => { location.href = 'login.html'; };
+            }
+        })();
+    
+});</script>
+
+</body>
+</html>

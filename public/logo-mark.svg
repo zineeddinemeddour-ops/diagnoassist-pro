@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">DIAGNO-ASSIST</title>
+  <desc id="desc">علامة حرف D مع رمز طبي</desc>
+  <defs>
+    <linearGradient id="panel" x1="10" y1="7" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102F50"/>
+      <stop offset="1" stop-color="#0A2037"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="24" y1="18" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#55D8CD"/>
+      <stop offset="1" stop-color="#2E82EA"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#panel)"/>
+  <path d="M18 15.5h12.5c12.1 0 20.5 6.5 20.5 16.5s-8.4 16.5-20.5 16.5H18v-33Z" fill="none" stroke="#F8FBFF" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M36 23v18M27 32h18" fill="none" stroke="url(#accent)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M8 19V12a4 4 0 0 1 4-4h7" fill="none" stroke="#55D8CD" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>
+</svg>

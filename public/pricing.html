@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأسعار | DIAGNO-ASSIST</title>
+    <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #fafcff;
+            color: #12294e;
+            min-height: 100vh;
+        }
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+        }
+        .blob-1 { width: 420px; height: 420px; background: #c8daff; top: -120px; left: -100px; }
+        .blob-2 { width: 380px; height: 380px; background: #b8ecd8; bottom: -100px; right: -80px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .nav-brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .nav-brand .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+        .nav-brand .brand-name { font-size: 19px; font-weight: 800; color: #12294e; letter-spacing: 1px; }
+        .nav-brand .brand-sub { font-size: 11px; color: #7f92b5; font-weight: 600; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            text-decoration: none;
+            color: #41547f;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #2563eb; }
+        .nav-links a .ico { font-size: 16px; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-purple {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-purple:hover { transform: translateY(-2px); }
+
+        .pricing {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 50px 40px 60px;
+        }
+        .pricing-title { text-align: center; margin-bottom: 44px; }
+        .pricing-title h1 { font-size: 38px; color: #12294e; margin-bottom: 10px; }
+        .pricing-title h1 .grad {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .pricing-title p { color: #5c6f96; font-size: 17px; }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 26px;
+            align-items: stretch;
+        }
+        .plan {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 22px;
+            padding: 34px 28px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            animation: planIn 0.7s ease-out forwards;
+        }
+        .plan:nth-child(1) { animation-delay: 0s; }
+        .plan:nth-child(2) { animation-delay: 0.35s; }
+        .plan:nth-child(3) { animation-delay: 0.7s; }
+        @keyframes planIn {
+            0% { opacity: 0; transform: translateY(24px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .plan:hover {
+            transform: translateY(-8px);
+            border-color: #2563eb;
+            box-shadow: 0 20px 50px rgba(37, 99, 235, 0.18);
+        }
+        .plan.featured {
+            border-color: #2563eb;
+            background: linear-gradient(180deg, #fff, #eef4ff);
+            box-shadow: 0 14px 44px rgba(37, 99, 235, 0.16);
+            position: relative;
+        }
+        .plan.featured .tag-popular {
+            position: absolute;
+            top: -14px;
+            right: 50%;
+            transform: translateX(50%);
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px 18px;
+            border-radius: 20px;
+        }
+        .plan .p-icon {
+            width: 60px; height: 60px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #e9f1ff, #e6faf4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 16px;
+        }
+        .plan h2 { font-size: 21px; color: #12294e; margin-bottom: 8px; }
+        .plan .p-type { font-size: 13px; color: #7f92b5; font-weight: 600; margin-bottom: 20px; }
+        .plan .p-price {
+            font-size: 38px;
+            font-weight: 800;
+            color: #2563eb;
+            margin-bottom: 6px;
+        }
+        .plan .p-price span { font-size: 15px; font-weight: 600; color: #7f92b5; }
+        .plan .p-soon {
+            font-size: 14px;
+            color: #93a6c9;
+            margin-bottom: 22px;
+            min-height: 42px;
+            line-height: 1.7;
+        }
+        .plan .p-feats {
+            list-style: none;
+            margin: 0 0 22px;
+            padding: 0;
+            text-align: right;
+        }
+        .plan .p-feats li {
+            font-size: 13.5px;
+            color: #41547f;
+            padding: 7px 0;
+            border-bottom: 1px dashed #e6edfa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.55;
+        }
+        .plan .p-feats li:last-child { border-bottom: none; }
+        .plan .p-feats li b { color: #12294e; }
+        .plan .p-feats .tick { color: #2563eb; font-weight: 800; }
+        .plan .p-price small { display: block; font-size: 12px; color: #93a6c9; font-weight: 600; margin-bottom: 10px; }
+        .plan .btn-buy {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .plan .btn-buy:hover { transform: translateY(-2px); }
+        .plan.outline .btn-buy {
+            background: #fff;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            margin-right: auto;
+        }
+        .crumb {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 40px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #93a6c9;
+            font-size: 14px;
+        }
+        .crumb a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .crumb .sep { color: #c8daff; }
+
+        footer {
+            background: #12294e;
+            color: #c8daff;
+            margin-top: 20px;
+        }
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 44px 50px 30px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 34px;
+        }
+        .footer-col h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+        .footer-col a {
+            display: block;
+            color: #b3a4d9;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: #fff; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .footer-brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .footer-brand .brand-name { color: #fff; font-weight: 800; letter-spacing: 1px; }
+        .footer-brand .brand-sub { display: block; font-size: 11px; color: #b3a4d9; margin-top: 2px; }
+        .footer-col p { font-size: 14px; line-height: 1.8; color: #c8daff; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding: 18px;
+            color: #7f92b5;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+            .pricing { padding: 30px 18px 40px; }
+            .pricing-title h1 { font-size: 28px; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            nav { padding: 14px 18px; }
+            .nav-links { display: none; }
+            .footer-grid { grid-template-columns: 1fr 1fr; padding: 30px 18px; }
+            .crumb { padding: 16px 18px 0; }
+        }
+    </style>
+    <link rel="stylesheet" href="site-ui.css" data-diagnoassist-ui="v2">
+    <script src="backend-storage.js"></script>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav>
+        <a class="nav-brand" href="index.html">
+            <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico">🏠</span> الرئيسية</a>
+            <a href="#"><span class="ico">🔬</span> كيف يعمل</a>
+            <a href="#"><span class="ico">🩺</span> المميزات</a>
+            <a href="#"><span class="ico">💰</span> الأسعار</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-purple">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <div class="crumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="sep">‹</span>
+        <span>الأسعار</span>
+    </div>
+
+    <section class="pricing">
+        <div class="pricing-title">
+            <h1>باقات <span class="grad">الأسعار</span></h1>
+            <p>ثلاث باقات تناسب كل ممارسة — من الأخصائي الفردي إلى المراكز الكبرى</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="plan">
+                <div class="p-icon">🌱</div>
+                <h2>🟢 المبتدئ</h2>
+                <div class="p-type">للأخصائيين الأفراد</div>
+                <div class="p-price">2,000 <span>دج / شهر</span></div>
+                <ul class="p-feats">
+                    <li><span class="tick">✓</span> <b>مستخدم واحد</b></li>
+                    <li><span class="tick">✓</span> التشخيص الفارقي <b>لاضطرابين محتملين</b> (PTSD + الاكتئاب)</li>
+                    <li><span class="tick">✓</span> تطبيق <b>اختبارين فقط</b></li>
+                    <li><span class="tick">✓</span> الاطلاع على <b>نتائج الاختبارات</b></li>
+                    <li><span class="tick">✓</span> حفظ <b>5 ملفات مرضى</b></li>
+                    <li><span class="tick">✓</span> <b>4 جلسات</b> لكل مريض + رسم بياني لـ <b>4 جلسات</b></li>
+                </ul>
+                <button class="btn-buy" onclick="location.href='payment.html'">اشترك الآن</button>
+            </div>
+
+            <div class="plan featured">
+                <span class="tag-popular">الأكثر شيوعًا</span>
+                <div class="p-icon">⭐</div>
+                <h2>🔵 الممارس</h2>
+                <div class="p-type">للممارسات والعيادات النشطة</div>
+                <div class="p-price">5,500 <span>دج / شهر</span></div>
+                <ul class="p-feats">
+                    <li><span class="tick">✓</span> <b>3 مستخدمين</b></li>
+                    <li><span class="tick">✓</span> التشخيص الفارقي <b>لـ 5 اضطرابات محتملة</b></li>
+                    <li><span class="tick">✓</span> تطبيق <b>عدة اختبارات معتمدة</b></li>
+                    <li><span class="tick">✓</span> نتائج الاختبارات <b>مع إمكانية إدخال ملاحظات</b></li>
+                    <li><span class="tick">✓</span> حفظ حتى <b>20 ملف مريض</b></li>
+                    <li><span class="tick">✓</span> <b>10 جلسات</b> لكل مريض + رسم بياني لـ <b>10 جلسات</b></li>
+                </ul>
+                <button class="btn-buy" onclick="location.href='payment.html'">اشترك الآن</button>
+            </div>
+
+            <div class="plan outline">
+                <div class="p-icon">🏆</div>
+                <h2>🟣 الخبير</h2>
+                <div class="p-type">للمنظمات والمراكز الكبرى</div>
+                <div class="p-price">22,000 <span>دج / شهر</span></div>
+                <ul class="p-feats">
+                    <li><span class="tick">✓</span> عدد مستخدمين <b>غير محدود</b></li>
+                    <li><span class="tick">✓</span> التشخيص الفارقي <b>لكل الاضطرابات المتاحة</b></li>
+                    <li><span class="tick">✓</span> <b>كل الاختبارات</b> + اختبارات حصرية وجديدة</li>
+                    <li><span class="tick">✓</span> نتائج مفصلة <b>مع ملاحظات</b></li>
+                    <li><span class="tick">✓</span> عدد <b>غير محدود</b> من ملفات المرضى</li>
+                    <li><span class="tick">✓</span> جلسات <b>غير محدودة</b> + رسم بياني غير محدود</li>
+                </ul>
+                <button class="btn-buy" onclick="location.href='payment.html'">اشترك الآن</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="#">من نحن</a>
+                <a href="#">مميزات المنصة</a>
+                <a href="#">كيف يعمل</a>
+                <a href="#">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="#">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>window.backendReady.then(() => {
+
+        (function () {
+            const btn = document.querySelector('.nav-actions .btn-purple');
+            if (!btn) return;
+            const u = JSON.parse(backendStorage.getItem('diagUser') || 'null');
+            if (u) {
+                btn.innerHTML = (u.isAdmin ? '👨‍💼' : '👤') + ' ' + (u.isAdmin ? 'المدير' : u.name);
+                btn.style.background = '#e9f1ff';
+                btn.style.color = '#2563eb';
+                btn.style.border = '1.5px solid #2563eb';
+                btn.onclick = () => {
+                    if (confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+                        backendLogout();
+                    }
+                };
+            } else {
+                btn.onclick = () => { location.href = 'login.html'; };
+            }
+        })();
+    
+});</script>
+
+</body>
+</html>

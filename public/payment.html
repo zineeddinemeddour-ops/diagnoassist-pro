@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدفع | DIAGNO-ASSIST</title>
+    <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #fafcff;
+            color: #12294e;
+            min-height: 100vh;
+        }
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+        }
+        .blob-1 { width: 420px; height: 420px; background: #c8daff; top: -120px; left: -100px; }
+        .blob-2 { width: 380px; height: 380px; background: #f5e7c8; bottom: -100px; right: -80px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .nav-brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .nav-brand .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+        .nav-brand .brand-name { font-size: 19px; font-weight: 800; color: #12294e; letter-spacing: 1px; }
+        .nav-brand .brand-sub { font-size: 11px; color: #7f92b5; font-weight: 600; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            text-decoration: none;
+            color: #41547f;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #2563eb; }
+        .nav-links a .ico { font-size: 16px; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-purple {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 11px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+            transition: transform 0.2s;
+        }
+        .btn-purple:hover { transform: translateY(-2px); }
+
+        .crumb {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 40px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #93a6c9;
+            font-size: 14px;
+        }
+        .crumb a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .crumb .sep { color: #c8daff; }
+
+        .pay-wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 35px 40px 60px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 36px;
+            align-items: start;
+        }
+        .pay-title h1 { font-size: 30px; color: #12294e; margin-bottom: 8px; }
+        .pay-title h1 .grad {
+            background: linear-gradient(135deg, #2563eb, #d4a017);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .pay-title p { color: #5c6f96; font-size: 15px; line-height: 1.8; }
+
+        .edahabia {
+            background: linear-gradient(135deg, #0b1526 0%, #12294e 55%, #1d4ed8 100%);
+            border-radius: 20px;
+            padding: 26px;
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(13, 34, 84, 0.5);
+            margin: 18px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .edahabia::before {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 215, 130, 0.14);
+            top: -70px;
+            right: -70px;
+        }
+        .edahabia::after {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 215, 130, 0.1);
+            bottom: -50px;
+            left: -40px;
+        }
+        .ed-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ed-card-top .chip {
+            width: 44px; height: 32px;
+            background: linear-gradient(135deg, #f5d47a, #c99b3f);
+            border-radius: 7px;
+            position: relative;
+        }
+        .ed-card-top .chip::after {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            border: 1px solid rgba(0,0,0,0.25);
+            border-radius: 3px;
+        }
+        .ed-card-top .dahabia {
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #f5d47a;
+            font-size: 15px;
+            text-align: left;
+        }
+        .ed-card-top .dahabia small { display: block; font-size: 9px; color: #d9c29a; letter-spacing: 0.5px; }
+        .ed-number {
+            font-size: 21px;
+            letter-spacing: 3px;
+            font-weight: 700;
+            font-family: 'Consolas', monospace;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            direction: ltr;
+            text-align: left;
+        }
+        .ed-bottom {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .ed-name { font-size: 13px; font-weight: 700; }
+        .ed-bottom .exp { font-size: 11px; color: #f5d47a; }
+        .ed-bottom .exp b { display: block; font-size: 14px; color: #fff; direction: ltr; letter-spacing: 1px; }
+
+        .pay-form {
+            background: #fff;
+            border: 2px solid #e3ecfe;
+            border-radius: 22px;
+            padding: 28px;
+        }
+        .pay-form h2 { font-size: 19px; color: #12294e; margin-bottom: 18px; }
+        .field { margin-bottom: 14px; }
+        .field label { display: block; font-size: 13px; font-weight: 700; color: #41547f; margin-bottom: 6px; }
+        .field input {
+            width: 100%;
+            border: 2px solid #e3ecfe;
+            border-radius: 12px;
+            padding: 11px 14px;
+            font-size: 15px;
+            color: #12294e;
+            background: #fafcff;
+            direction: ltr;
+            text-align: left;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .field input:focus { border-color: #2563eb; }
+        .pay-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .amount-box {
+            background: linear-gradient(135deg, #e9f1ff, #fdf6e3);
+            border: 1px dashed #d4a017;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #5c6f96;
+            font-weight: 600;
+        }
+        .amount-box b { color: #2563eb; font-size: 18px; }
+        .btn-pay {
+            width: 100%;
+            background: linear-gradient(135deg, #d4a017, #b8860b);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(212, 160, 23, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn-pay:hover { transform: translateY(-2px); }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            font-size: 12px;
+            color: #7f92b5;
+            margin-top: 12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 41, 78, 0.65);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal.show { display: flex; animation: fadeBg 0.3s ease-out; }
+        @keyframes fadeBg { from { opacity: 0; } to { opacity: 1; } }
+        .modal-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 44px 34px;
+            text-align: center;
+            max-width: 460px;
+            width: 100%;
+            animation: popIn 0.45s cubic-bezier(0.18, 1.25, 0.4, 1);
+        }
+        @keyframes popIn {
+            from { transform: scale(0.6); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .modal-box .big-check {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-size: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 14px 40px rgba(34, 197, 94, 0.45);
+            animation: checkPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes checkPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .modal-box h2 { font-size: 24px; color: #12294e; margin-bottom: 10px; }
+        .modal-box p { color: #5c6f96; font-size: 15px; line-height: 1.8; margin-bottom: 22px; }
+        .modal-box .btn-ok {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff;
+            border: none;
+            padding: 13px 44px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .modal-box .btn-ok:hover { transform: translateY(-2px); }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(140px);
+            background: #12294e;
+            color: #fff;
+            padding: 16px 28px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            z-index: 1100;
+            box-shadow: 0 14px 44px rgba(18, 41, 78, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.5s cubic-bezier(0.18, 1.25, 0.4, 1);
+            border-right: 5px solid #d4a017;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        footer {
+            background: #12294e;
+            color: #c8daff;
+            margin-top: 20px;
+        }
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 44px 50px 30px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 34px;
+        }
+        .footer-col h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+        .footer-col a {
+            display: block;
+            color: #b3a4d9;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .footer-col a:hover { color: #fff; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .footer-brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .footer-brand .brand-name { color: #fff; font-weight: 800; letter-spacing: 1px; }
+        .footer-brand .brand-sub { display: block; font-size: 11px; color: #b3a4d9; margin-top: 2px; }
+        .footer-col p { font-size: 14px; line-height: 1.8; color: #c8daff; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding: 18px;
+            color: #7f92b5;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .pay-wrap { grid-template-columns: 1fr; padding: 24px 18px 40px; }
+            nav { padding: 14px 18px; }
+            .nav-links { display: none; }
+            .crumb { padding: 16px 18px 0; }
+            .footer-grid { grid-template-columns: 1fr 1fr; padding: 30px 18px; }
+            .pay-title h1 { font-size: 24px; }
+        }
+    </style>
+    <link rel="stylesheet" href="site-ui.css" data-diagnoassist-ui="v2">
+    <script src="backend-storage.js"></script>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav>
+        <a class="nav-brand" href="index.html">
+            <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico">🏠</span> الرئيسية</a>
+            <a href="#"><span class="ico">🔬</span> كيف يعمل</a>
+            <a href="#"><span class="ico">🩺</span> المميزات</a>
+            <a href="#"><span class="ico">💰</span> الأسعار</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-purple">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <div class="crumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="sep">‹</span>
+        <a href="pricing.html">الأسعار</a>
+        <span class="sep">‹</span>
+        <span>الدفع</span>
+    </div>
+
+    <div class="pay-wrap">
+        <div>
+            <div class="pay-title">
+                <h1>الدفع بـ <span class="grad">الذهبية</span></h1>
+                <p>أدخل بيانات بطاقة الذهبية الجزائرية لإتمام تفعيل اشتراكك. جميع المعاملات مشفرة وآمنة 100%.</p>
+            </div>
+
+            <div class="edahabia">
+                <div class="ed-card-top">
+                    <div class="chip"></div>
+                    <div class="dahabia">CARTE EDHABIA<small>الذهبية — الجزائر</small></div>
+                </div>
+                <div class="ed-number">6037 4512 7845 9013</div>
+                <div class="ed-bottom">
+                    <div class="ed-name">MOHAMED ABDELLAH</div>
+                    <div class="exp">EXP <b>12/28</b></div>
+                </div>
+            </div>
+
+            <div class="amount-box">
+                <span>مبلغ الاشتراك</span>
+                <b>2,500 دج <small style="font-size:12px; color:#7f92b5;">/ شهريًا</small></b>
+            </div>
+        </div>
+
+        <div class="pay-form">
+            <h2>بيانات البطاقة</h2>
+            <div class="field">
+                <label>رقم البطاقة</label>
+                <input id="cardNum" value="6037 4512 7845 9013" maxlength="19">
+            </div>
+            <div class="field">
+                <label>اسم حامل البطاقة</label>
+                <input id="cardName" value="MOHAMED ABDELLAH" style="direction:rtl; text-align:right;">
+            </div>
+            <div class="pay-row">
+                <div class="field">
+                    <label>تاريخ الانتهاء</label>
+                    <input id="cardExp" value="12/28" maxlength="5">
+                </div>
+                <div class="field">
+                    <label>رمز الأمان CVV</label>
+                    <input id="cardCvv" value="712" maxlength="3" type="password">
+                </div>
+            </div>
+            <button class="btn-pay" id="payBtn">💳 الدفع الآن</button>
+            <div class="secure-note">🔒 معاملة مشفرة وآمنة تمامًا</div>
+        </div>
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-box">
+            <div class="big-check">✓</div>
+            <h2>تم الدفع بنجاح!</h2>
+            <p>شكرًا على اختيارنا ❤️<br>تم تفعيل اشتراكك بنجاح، وسيصلك إشعار تفعيل على بريدك الإلكتروني.</p>
+            <button class="btn-ok" id="closeSuccess">حسنًا</button>
+        </div>
+    </div>
+
+    <div class="toast" id="receiptToast">
+        🧾 تم إصدار فاتورتك — رقم العملية: <b style="color:#f5d47a;">DA-2026-8471</b>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="#">من نحن</a>
+                <a href="#">مميزات المنصة</a>
+                <a href="#">كيف يعمل</a>
+                <a href="#">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="#">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>
+        const payBtn = document.getElementById('payBtn');
+        const successModal = document.getElementById('successModal');
+        const receiptToast = document.getElementById('receiptToast');
+
+        payBtn.addEventListener('click', () => {
+            const num = document.getElementById('cardNum').value.replace(/\s/g, '');
+            const name = document.getElementById('cardName').value.trim();
+            const exp = document.getElementById('cardExp').value.trim();
+            const cvv = document.getElementById('cardCvv').value.trim();
+
+            if (num.length !== 16 || !name || exp.length < 4 || cvv.length !== 3) {
+                alert('يرجى التحقق من صحة بيانات البطاقة');
+                return;
+            }
+            successModal.classList.add('show');
+        });
+
+        document.getElementById('closeSuccess').addEventListener('click', () => {
+            successModal.classList.remove('show');
+            receiptToast.classList.add('show');
+            setTimeout(() => {
+                window.location.href = 'patient.html';
+            }, 4000);
+        });
+    </script>
+
+    <script>window.backendReady.then(() => {
+
+        (function () {
+            const btn = document.querySelector('.nav-actions .btn-purple');
+            if (!btn) return;
+            const u = JSON.parse(backendStorage.getItem('diagUser') || 'null');
+            if (u) {
+                btn.innerHTML = (u.isAdmin ? '👨‍💼' : '👤') + ' ' + (u.isAdmin ? 'المدير' : u.name);
+                btn.style.background = '#e9f1ff';
+                btn.style.color = '#2563eb';
+                btn.style.border = '1.5px solid #2563eb';
+                btn.onclick = () => {
+                    if (confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+                        backendLogout();
+                    }
+                };
+            } else {
+                btn.onclick = () => { location.href = 'login.html'; };
+            }
+        })();
+    
+});</script>
+
+</body>
+</html>

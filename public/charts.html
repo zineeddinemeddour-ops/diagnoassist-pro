@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرسوم البيانية | DIAGNO-ASSIST</title>
+    <link rel="icon" type="image/svg+xml" href="logo-mark.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #fafcff;
+            color: #12294e;
+            min-height: 100vh;
+        }
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+        }
+        .blob-1 { width: 420px; height: 420px; background: #c8daff; top: -120px; left: -100px; }
+        .blob-2 { width: 380px; height: 380px; background: #b8ecd8; bottom: -100px; right: -80px; }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-brand img { width: 46px; height: 46px; border-radius: 14px; object-fit: cover; }
+        .nav-brand .brand-text { display: flex; flex-direction: column; line-height: 1.3; }
+        .nav-brand .brand-name { font-size: 19px; font-weight: 800; color: #12294e; letter-spacing: 1px; }
+        .nav-brand .brand-sub { font-size: 11px; color: #7f92b5; font-weight: 600; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            text-decoration: none; color: #41547f; font-weight: 600; font-size: 15px;
+            display: flex; align-items: center; gap: 6px; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #2563eb; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-purple {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff; border: none; padding: 11px 24px; border-radius: 12px;
+            font-weight: 700; font-size: 15px; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35); transition: transform 0.2s;
+        }
+        .btn-purple:hover { transform: translateY(-2px); }
+
+        .crumb {
+            max-width: 1100px; margin: 0 auto; padding: 20px 40px 0;
+            display: flex; align-items: center; gap: 8px; color: #93a6c9; font-size: 14px;
+            flex-wrap: wrap;
+        }
+        .crumb a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .crumb .sep { color: #c8daff; }
+
+        .chart-wrap { max-width: 1000px; margin: 0 auto; padding: 30px 40px 60px; }
+        .chart-title { text-align: center; margin-bottom: 8px; }
+        .chart-title h1 { font-size: 30px; color: #12294e; margin-bottom: 8px; }
+        .chart-title h1 .grad {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .chart-title p { color: #5c6f96; font-size: 15px; }
+
+        .pt-strip {
+            max-width: 920px; margin: 22px auto 0;
+            background: linear-gradient(135deg, #12294e, #2563eb);
+            color: #fff; border-radius: 18px; padding: 18px 24px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .pt-strip .pi {
+            width: 54px; height: 54px; border-radius: 50%;
+            background: rgba(255,255,255,0.15); font-size: 26px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pt-strip b { font-size: 18px; }
+        .pt-strip span { font-size: 13px; opacity: 0.85; display: block; margin-top: 3px; }
+        .pt-strip .right { margin-right: auto; display: flex; gap: 12px; flex-wrap: wrap; }
+        .pt-chip {
+            background: rgba(255,255,255,0.15); border-radius: 20px;
+            padding: 6px 14px; font-size: 13px; display: flex; align-items: center; gap: 6px;
+        }
+
+        .sum-cards {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+            margin-top: 24px;
+        }
+        .sum-card {
+            background: #fff; border: 2px solid #e3ecfe; border-radius: 16px;
+            padding: 18px 20px; display: flex; align-items: center; gap: 14px;
+        }
+        .sum-card .sc-ico {
+            width: 48px; height: 48px; border-radius: 14px; font-size: 22px;
+            display: flex; align-items: center; justify-content: center;
+            background: #e9f1ff;
+        }
+        .sum-card b { display: block; font-size: 21px; color: #12294e; }
+        .sum-card small { font-size: 12.5px; color: #5c6f96; }
+
+        .card-block {
+            background: #fff; border: 2px solid #e3ecfe; border-radius: 18px;
+            padding: 24px; margin-top: 24px;
+        }
+        .card-block .cb-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .card-block .cb-head .cb-ico {
+            width: 42px; height: 42px; border-radius: 12px; font-size: 20px;
+            background: #e9f1ff; display: flex; align-items: center; justify-content: center;
+        }
+        .card-block .cb-head h3 { font-size: 17px; color: #12294e; }
+        .card-block .cb-head small { color: #5c6f96; font-size: 12.5px; }
+
+.svgs .poly { fill: none; stroke: #2563eb; stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; }
+        .svgs .area { fill: url(#areaGrad); }
+        .svgs .dot { fill: #fff; stroke: #2563eb; stroke-width: 3; }
+        .svgs .dot.latest { fill: #fff; stroke: #16a34a; stroke-width: 3.5; }
+        .svgs text { font-family: inherit; font-size: 12px; fill: #5c6f96; text-anchor: middle; }
+        .svgs .tval { font-weight: 800; fill: #12294e; }
+
+        .session-card {
+            background: #fff; border: 2px solid #e3ecfe; border-radius: 16px;
+            padding: 16px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .session-card .sc-num {
+            width: 46px; height: 46px; border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #60a5fa); color: #fff;
+            font-weight: 800; font-size: 18px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .session-card.latest .sc-num { background: linear-gradient(135deg, #16a34a, #34d399); }
+        .session-card .sc-info b { font-size: 15px; color: #12294e; display: block; }
+        .session-card .sc-info span { font-size: 12.5px; color: #5c6f96; }
+        .state-badge { font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 20px; }
+        .st-high { background: #d9f8e6; color: #15803d; }
+        .st-mid { background: #fdeed2; color: #b45309; }
+        .st-low { background: #fbdcdc; color: #b91c1c; }
+        .view-answers {
+            margin-right: auto; background: #e9f1ff; color: #2563eb;
+            border: 2px solid #c8daff; border-radius: 10px; padding: 9px 16px;
+            font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px; font-family: inherit;
+        }
+        .view-answers:hover { background: #2563eb; color: #fff; }
+
+        .empty-box {
+            text-align: center; padding: 50px 20px; color: #5c6f96;
+            background: #fff; border: 2px dashed #c8daff; border-radius: 18px; margin-top: 24px;
+        }
+        .empty-box .big-ico { font-size: 46px; display: block; margin-bottom: 12px; }
+        .empty-box a { color: #2563eb; font-weight: 800; }
+
+        .modal {
+            display: none; position: fixed; inset: 0; z-index: 100;
+            background: rgba(18, 41, 78, 0.6); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal.show { display: flex; }
+        .modal-box {
+            background: #fff; border-radius: 20px; max-width: 800px; width: 100%;
+            max-height: 85vh; display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(18, 41, 78, 0.4);
+        }
+        .modal-head {
+            background: linear-gradient(135deg, #12294e, #2563eb); color: #fff;
+            padding: 18px 24px; display: flex; align-items: center; gap: 12px;
+        }
+        .modal-head b { font-size: 16px; }
+        .modal-head span { font-size: 12.5px; opacity: 0.85; display: block; margin-top: 2px; }
+        .modal-head button {
+            margin-right: auto; background: rgba(255,255,255,0.15); border: none;
+            color: #fff; font-size: 17px; width: 36px; height: 36px; border-radius: 50%;
+            cursor: pointer; font-weight: 800;
+        }
+        .modal-body { padding: 16px 24px 24px; overflow-y: auto; flex: 1; }
+
+        .interp-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 9px 0; border-bottom: 1px dashed #e3ecfe;
+            font-size: 14px; color: #41547f; flex-wrap: wrap;
+        }
+        .interp-item .ii-num {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: #e9f1ff; color: #2563eb; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 13px;
+        }
+        .interp-item b { color: #12294e; }
+        .interp-item b.up { color: #15803d; }
+        .interp-item b.down { color: #b91c1c; }
+        .interp-trend {
+            margin-top: 14px; background: #e9f1ff;
+            border: 1px solid #c8daff; border-radius: 12px;
+            padding: 12px 16px; font-size: 14px; color: #41547f; line-height: 1.8;
+        }
+        .notes-area {
+            width: 100%; min-height: 110px; margin-top: 16px;
+            background: #fafcff; border: 2px solid #e3ecfe;
+            border-radius: 12px; padding: 12px 14px;
+            font-size: 14px; font-family: inherit; color: #12294e;
+            resize: vertical;
+        }
+        .notes-area:focus { outline: none; border-color: #2563eb; }
+        .btn-notes-save {
+            width: 100%; margin-top: 12px;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: #fff; border: none; padding: 13px;
+            border-radius: 12px; font-weight: 800; font-size: 15px;
+            cursor: pointer; transition: transform 0.2s;
+        }
+        .btn-notes-save:hover { transform: translateY(-2px); }
+        .save-ok {
+            margin-top: 12px; text-align: center;
+            background: #dff6e8; color: #15803d;
+            border: 1px solid #a7e3c0; border-radius: 10px;
+            padding: 10px; font-size: 13.5px; font-weight: 700;
+        }
+        .mi {
+            display: flex; align-items: center; gap: 10px; padding: 8px 0;
+            border-bottom: 1px solid #eef4ff; font-size: 13.5px;
+        }
+        .mi:last-child { border-bottom: none; }
+        .mi-no {
+            width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+            background: #e9f1ff; color: #2563eb; font-weight: 800; font-size: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .mi-text { flex: 1; color: #12294e; font-weight: 600; }
+        .mi-ans {
+            background: #e9f1ff; color: #2563eb; font-weight: 800; font-size: 11.5px;
+            border-radius: 16px; padding: 4px 12px; flex-shrink: 0;
+        }
+
+        footer {
+            background: #12294e; color: #c8daff; margin-top: 20px;
+        }
+        .footer-grid {
+            max-width: 1300px; margin: 0 auto; padding: 44px 50px 30px;
+            display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 34px;
+        }
+        .footer-col h4 { color: #fff; font-size: 16px; margin-bottom: 16px; }
+        .footer-col a { display: block; color: #b3a4d9; text-decoration: none; font-size: 14px; margin-bottom: 10px; transition: color 0.3s; }
+        .footer-col a:hover { color: #fff; }
+        .footer-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .footer-brand img { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; }
+        .footer-brand .brand-name { color: #fff; font-weight: 800; letter-spacing: 1px; }
+        .footer-brand .brand-sub { display: block; font-size: 11px; color: #b3a4d9; margin-top: 2px; }
+        .footer-col p { font-size: 14px; line-height: 1.8; color: #c8daff; }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1); text-align: center;
+            padding: 18px; color: #7f92b5; font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .chart-wrap { padding: 24px 18px 40px; }
+            nav { padding: 14px 18px; }
+            .nav-links { display: none; }
+            .crumb { padding: 16px 18px 0; }
+            .footer-grid { grid-template-columns: 1fr 1fr; padding: 30px 18px; }
+            .sum-cards { grid-template-columns: 1fr; }
+            .pt-strip .right { margin-right: 0; }
+            .view-answers { margin-right: 0; }
+        }
+    </style>
+    <link rel="stylesheet" href="site-ui.css" data-diagnoassist-ui="v2">
+    <script src="backend-storage.js"></script>
+</head>
+<body>
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <nav>
+        <a class="nav-brand" href="index.html">
+            <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico">🏠</span> الرئيسية</a>
+            <a href="#"><span class="ico">🔬</span> كيف يعمل</a>
+            <a href="#"><span class="ico">🩺</span> المميزات</a>
+            <a href="#"><span class="ico">💰</span> الأسعار</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-purple">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <div class="crumb">
+        <a href="index.html">الرئيسية</a>
+        <span class="sep">‹</span>
+        <a href="patient.html">ملف المريض</a>
+        <span class="sep">‹</span>
+        <a href="test.html">الاختبار</a>
+        <span class="sep">‹</span>
+        <span>الرسوم البيانية</span>
+    </div>
+
+    <div class="chart-wrap">
+        <div class="chart-title">
+            <h1>لوحة <span class="grad">الرسوم البيانية</span></h1>
+            <p>نتائج جلسات الاختبار — تتحدّث تلقائيًا مع كل جلسة جديدة</p>
+        </div>
+
+        <div class="pt-strip">
+            <div class="pi">📊</div>
+            <div>
+                <b>محمد عبد الله</b>
+                <span id="chartTestName">مقياس الطلبة لاضطراب ما بعد الصدمة — الملف: PT-2026-0135</span>
+            </div>
+            <div class="right">
+                <span class="pt-chip" id="chipCount">🗓️ 0 جلسة</span>
+                <span class="pt-chip" id="chipLast">📈 آخر نتيجة: —</span>
+            </div>
+        </div>
+
+        <div class="sum-cards">
+            <div class="sum-card">
+                <div class="sc-ico">🗓️</div>
+                <div><b id="sumCount">0</b><small>الجلسات المخزنة في الملف</small></div>
+            </div>
+            <div class="sum-card">
+                <div class="sc-ico">📈</div>
+                <div><b id="sumLast">—</b><small>نتيجة الجلسة الأخيرة <span id="sumLastMax">(من 376)</span></small></div>
+            </div>
+            <div class="sum-card">
+                <div class="sc-ico">🎯</div>
+                <div><b id="sumAvg">—</b><small>متوسط نتائج جميع الجلسات</small></div>
+            </div>
+        </div>
+
+        <div class="card-block">
+            <div class="cb-head">
+                <div class="cb-ico">📈</div>
+                <div>
+                    <h3>مخطط تطور الجلسات</h3>
+                    <small>الجلسة الأخيرة (جلسة 4) تتغيّر حسب الإجابات التي تُدخل من صفحة الاختبار</small>
+                </div>
+            </div>
+            <svg class="svgs" id="lineSvg" viewBox="0 0 720 350"></svg>
+            <div class="legend">
+                <span><i class="lg-red"></i> ضعيفة <span id="lgLow">(94–188)</span></span>
+                <span><i class="lg-orange"></i> متوسطة <span id="lgMid">(189–282)</span></span>
+                <span><i class="lg-green"></i> مرتفعة <span id="lgHigh">(283–376)</span></span>
+                <span><i class="lg-blue"></i> الخط البياني (النتيجة)</span>
+            </div>
+        </div>
+
+        <div class="card-block">
+            <div class="cb-head">
+                <div class="cb-ico">🕘</div>
+                <div>
+                    <h3>سجل الجلسات والاختيارات</h3>
+                    <small>اضغط أيقونة 👁 للاطلاع على الاختيارات السابقة لكل جلسة</small>
+                </div>
+            </div>
+            <div id="sessionsList"></div>
+        </div>
+
+        <div class="card-block">
+            <div class="cb-head">
+                <div class="cb-ico">📋</div>
+                <div>
+                    <h3>تفسير النتائج وتجميع بيانات الجلسات</h3>
+                    <small>ملخص تلقائي يتحدّث مع كل جلسة جديدة</small>
+                </div>
+            </div>
+            <div id="interpBox"></div>
+            <textarea class="notes-area" id="notesArea" placeholder="اكتب هنا ملاحظاتك كأخصائي حول هذه الجلسات (الملاحظة على أخذ النتائج بتوجيه، خطة العلاج، موعد الجلسة القادمة...)..."></textarea>
+            <button class="btn-notes-save" id="notesSaveBtn">💾 حفظ الملاحظات في الملف</button>
+            <div class="save-ok" id="saveOk" style="display:none;">✓ تم حفظ الملاحظات في الملف بنجاح.</div>
+        </div>
+
+        <div class="empty-box" id="emptyBox" style="display:none;">
+            <span class="big-ico">📭</span>
+            لا توجد جلسات محفوظة بعد — أنشئ جلسة جديدة من
+            <a href="test.html">صفحة الاختبار</a> ثم احفظ الملف.
+        </div>
+    </div>
+
+    <div class="modal" id="answersModal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <div style="font-size:26px;">👁</div>
+                <div>
+                    <b id="mTitle">اختيارات الجلسة</b>
+                    <span id="mSub">—</span>
+                </div>
+                <button id="mClose">✕</button>
+            </div>
+            <div class="modal-body" id="mBody"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="logo-mark.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="#">من نحن</a>
+                <a href="#">مميزات المنصة</a>
+                <a href="#">كيف يعمل</a>
+                <a href="#">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="#">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer>
+
+    <script>window.backendReady.then(() => {
+
+        const STATECLS = { 'مرتفعة': 'st-high', 'متوسطة': 'st-mid', 'ضعيفة': 'st-low' };
+
+        const ITEMS94 = [
+            'تتقحّم ذاكرتي تفاصيل الحدث الصادم دون رغبة مني',
+            'تباغتني مشاعر العجز التي عشتها أثناء الصدمة وكأنها تحدث الآن',
+            'أشعر بأنني أعيد معايشة الحدث الصادم من جديد',
+            'تتكرر مراودة الذكريات عن الحدث الصادم دون إرادتي',
+            'أجد صعوبة في إخراج تفاصيل الحدث الصادم من رأسي',
+            'تداهمني نوبات من الخوف المفاجئ دون سبب واضح منذ وقوع الصدمة',
+            'تراودني كوابيس تتعلق بالحادث الذي تعرضت له',
+            'تعيد لي الكوابيس مشاعر مرتبطة بالصدمة',
+            'تجتاحني تقلبات مزاجية حادة لا أستطيع السيطرة عليها',
+            'عندما تهاجمني ذكرى الصدمة يختل إدراكي للوقت أو المكان للحظات',
+            'أشعر أن ذكريات الصدمة تلاحقني حتى في لحظات الاسترخاء أو قبل النوم مباشرة',
+            'أشعر فجأة وكأنني أرى الحدث الصدمي الآن بكامل تفاصيله',
+            'أشعر بالذعر لمجرد التفكير في أنني قد أجبر على التحدث عما حدث لي',
+            'أتحاشى مشاهدة الأخبار أو البرامج التي قد تثير ذكريات الصدمة',
+            'أحاول تفادي الأفكار المزعجة التي تذكرني بالحدث',
+            'أقوم بجهد كبير لإشغال نفسي بالعمل أو أي نشاط للهرب من التفكير',
+            'أتهرب بصرامة من المحادثات أو النقاشات التي قد تفتح سيرة الصدمة',
+            'أغير طريقي أو أتجنب الأماكن الجغرافية التي وقعت فيها الصدمة',
+            'أتجنب الأشخاص الذين يذكرونني بالحدث الصادم',
+            'أبذل جهدًا واعيًا لتجنب التفكير في أي شيء يخص الحدث الصادم',
+            'أرفض الحديث عن تفاصيل تجربتي الصادمة للآخرين',
+            'أهملت أشياء أو هوايات كنت أحبها لمجرد أنها باتت مرتبطة في ذهني بذكريات الصدمة',
+            'أبتعد عن الأنشطة التي قد تتقاطع مع تفاصيل صدمتي',
+            'أكتم مشاعري الداخلية بجهد كبير لكي أتجنب الشعور بالألم المرتبط بالحدث',
+            'فقدت القدرة على الشعور بالاستمتاع تجاه الأنشطة التي كنت أستمتع بها قبل الحادثة',
+            'أشعر بالذنب تجاه ما حدث',
+            'ينتابني شعور باليأس تجاه المستقبل',
+            'منذ الحادث الصادم أشعر بالعجز عن التخطيط للمستقبل',
+            'منذ الحادث أصبحت أشعر بالغربة عن الآخرين',
+            'يسيطر عليّ شعور دائم بالترقب وكأن شيئًا ما سيحدث',
+            'أصبحت عاجزًا عن التعبير عن مشاعري تجاه المقربين مني',
+            'أشعر بعدم الارتياح عند رؤية صورة أو شخص مرتبط بالحدث الصادم',
+            'منذ الحادث أجد صعوبة في اتخاذ القرارات البسيطة بوضوح',
+            'يتشتت ذهني دومًا لفترة طويلة منذ الحادثة',
+            'أشعر بالذنب تجاه نجاتي من الحادث',
+            'عجزت عن تذكر أجزاء أو تفاصيل مهمة جدًا من الحدث الصادم',
+            'ألوم نفسي بقسوة على عدم قدرتي على منع الحادث',
+            'تسيطر عليّ مشاعر سلبية كالخوف والرعب والغضب أو الخزي والندم',
+            'فقدت القدرة على عيش المشاعر الإيجابية كالحب والفرح أو الرضا التام',
+            'ينتابني ضيق نفسي شديد إذا مررت بموقف أو سمعت كلمة تذكرني بما حدث',
+            'يستجيب جسدي بعنف (تسارع نبضات، تعرق، ضيق تنفس) عند التعرض لأي مذكّر بالصدمة',
+            'أعيش في حالة تأهب قصوى وترقب دائم للمخاطر كأنني مهدد في كل لحظة',
+            'أعاني من تشتت ذهني حاد وصعوبة بالغة في التركيز على دراستي أو عملي منذ الحادث',
+            'أنفجر غضبًا بشكل مفاجئ دون مبرر كاف',
+            'أشعر برغبة قوية لإيذاء الآخرين جسديًا أو ضرب الأشياء من حولي',
+            'أفزع وأنتفض بعنف من الأصوات المفاجئة أو الحركات غير المتوقعة',
+            'أقوم بتصرفات طائشة أو تدميرية لذاتي منذ الحادث الصدمي',
+            'أشعر بتململ حركي مستمر وعجز تام عن الجلوس بهدوء أو الاسترخاء',
+            'أبدي سلوكيات عدوانية (لفظية أو جسدية) دون مبرر كاف',
+            'أعاني من تشتت ذهني حاد وصعوبة بالغة في التركيز على دراستي أو عملي منذ الحادث',
+            'أجد صعوبة شديدة في الدخول في النوم أو الاستمرار فيه بشكل مريح',
+            'أستيقظ مذعورًا في منتصف الليل مع تسارع في ضربات القلب وضيق في الصدر',
+            'أصبحت سريع الاستثارة والانزعاج من المثيرات البيئية حولي (كالإضاءة أو الضوضاء)',
+            'يراودني قلق مزمن حيال سلامتي الشخصية وسلامة من أحبهم بشكل مبالغ فيه',
+            'أشعر بضغط نفسي جسدي (كغصة في الحلق أو ثقل في الصدر) نتيجة كبت الانفعالات الحادة',
+            'أشعر أنني أصبحت سريع الانفعال على أتفه الأمور بدون سبب واضح',
+            'عندما تجتاحني مشاعر قوية، أعجز عن تهدئة نفسي أو استعادة توازني',
+            'أمر بتقلبات مزاجية سريعة جدًا دون أسباب واضحة لمن حولي',
+            'أعيش حالة من الخدر العاطفي الطويل حيث لا أشعر بأي شيء على الإطلاق',
+            'تخرج انفعالاتي عن السيطرة بشكل يجعلني أشعر بالرعب من نفسي ومن ردود أفعالي',
+            'منذ الحادث، ألجأ لسلوكيات اندفاعية خطرة لكي أهرب من مشاعري عندما أشعر بالحزن أو الضغط',
+            'تمنعني حدة مشاعري من التفكير بعقلانية واتخاذ القرارات السليمة',
+            'صرت أبكي بحرقة حادة في مواقف قد يراها الآخرون عادية أو بسيطة، منذ الحادث الصادم',
+            'أصبحت أواجه صعوبة بالغة في التعبير عما بداخلي من مشاعر',
+            'أتهجم على الآخرين بالكلام الجارح كوسيلة للتنفيس عن غضبي',
+            'ينتابني إحساس بأنني قنبلة قد تنفجر انفعالياً في أي لحظة',
+            'أشعر أن حياتي قد انتهت فعليًا بعد ذلك الحدث الصادم',
+            'أعتقد أنني كنت السبب وراء ما حدث بشكل أو بآخر',
+            'يرافقني شعور بأنني إنسان محطم من الداخل لا يمكن إصلاحي',
+            'يتملكني إحساس بالعار من نفسي بسبب ما مررت به',
+            'أرى نفسي أقل قيمة من أي شخص أتعامل معه',
+            'أشعر أنني تحولت إلى عبء ثقيل على كاهل المحيطين بي وعائلتي',
+            'أجد صعوبة بالغة في مسامحة نفسي على أي خطأ',
+            'أشعر أن شخصيتي الحقيقية قد تلاشت وضاعت بعد الصدمة',
+            'يسيطر عليّ شعور بأنني لا أستحق السعادة أو النجاح أو الحب من الآخرين',
+            'أشعر أنني ضحية',
+            'أشعر بالعجز عن حماية نفسي أو السيطرة على مجريات حياتي',
+            'أشعر بالدونية حتى عندما يمدحني الآخرون',
+            'يتملكني يقين داخلي بأنني شخص غير مرغوب فيه',
+            'تشكلت لدي قناعة سلبية وثابتة بأنني شخص سيء',
+            'منذ الحادث، صرت أحس أنني غير كافٍ',
+            'أجد صعوبة في بناء علاقات مقربة أو حميمية مع أشخاص جدد في حياتي',
+            'أحافظ على مسافة وجدانية وعزلة عن الآخرين حماية لنفسي من التعرض للأذى',
+            'يسيطر عليّ شك من نوايا الآخرين حتى عندما يظهرون لي اللطف',
+            'أعجز عن الشعور بالأمان الوجداني داخل علاقاتي العاطفية أو الأسرية الحالية',
+            'أجد صعوبة في الجلوس أو الاقتراب من أو الاندماج مع الآخرين',
+            'أصبحت أفضل العزلة عن البشر على عناء التعامل معهم',
+            'أنسحب من العلاقة بمجرد أن أشعر أنها أصبحت قريبة أو جادة',
+            'أشعر بالخوف من أن الأشخاص الذين أحبهم سيهجرونني أو يتخلون عني',
+            'أشعر بنفور إذا حاول شخص ما التقرب مني أو إظهار التعاطف معي',
+            'صرت أجد نفسي أدخل في علاقات غير صحية أو مؤذية',
+            'أشعر أن الآخرين عاجزون عن فهم عمق المعاناة التي عشتها',
+            'صرت أنسحب من المناسبات الاجتماعية',
+            'فقدت الثقة في الأشخاص منذ الحادث الصادم'
+        ];
+        const ITEMS_MDD = [
+            'شعرت بمسحة من الحزن تخيم على يومي دون وجود سبب واضح',
+            'فقدت الاستمتاع بالأنشطة التي كنت أمارسها سابقًا',
+            'شعرت بفراغ داخلي يصعب عليّ تفسيره',
+            'شعرت برغبة متكررة في البكاء',
+            'لاحظت أن مزاجي يكون في أسوأ حالاته صباحًا عند الاستيقاظ',
+            'يتحسن مزاجي تدريجيًا خلال اليوم بعد أن كان سيئًا في أوله',
+            'لم تعد الهوايات التي أحبها تمنحني المتعة',
+            'شعرت بأن قدرتي على الإحساس بالمشاعر قد تراجعت',
+            'لم تعد الأنباء السارة أو المناسبات السعيدة تحرك مشاعري',
+            'اختفت لديّ مشاعر البهجة',
+            'شعرت بالجفاء من الأشخاص المقربين مني (كالعائلة أو الأصدقاء)',
+            'شعرت بالبرود العاطفي تجاه الأشخاص المقربين',
+            'حدث أن أردت البكاء دون أن أستطيع فعل ذلك',
+            'انتابني إحساس بالمرارة وكأن كل ما حولي في الحياة قد فقد قيمته',
+            'شعرت بضيق جعلني سريع الانفعال من أقل الكلمات أو المواقف',
+            'عجزت عن التفاعل انفعاليًا مع محيطي',
+            'شعرت بأنني منفصل عن الآخرين حتى عندما أكون بينهم',
+            'عجزت عن الحفاظ على تركيزي أثناء القراءة، أو مشاهدة التلفاز، أو متابعة نقاش بسيط',
+            'سيطرت عليّ فكرة أن الفشل هو حليفي الحتمي في أي عمل أو خطوة قد أقدم عليها',
+            'تملكني اعتقاد راسخ بأنني عبء ثقيل على عائلتي وعلى كل من حولي',
+            'واجهت صعوبة في استدعاء المعلومات أو تذكر المواعيد والالتزامات اليومية الروتينية',
+            'انتابتني أفكار تلح عليّ بأن الموت قد يكون راحة لي من هذه المعاناة المستمرة',
+            'أعتقد بأن عقلي مشوش أو أقل كفاءة',
+            'أحس وكأن عملياتي العقلية أصبحت أبطأ',
+            'شعرت بالتردد الشديد في اتخاذ القرارات اليومية البسيطة (مثل اختيار ملابسي أو طعامي)',
+            'سيطر عليّ التشاؤم تجاه مستقبلي',
+            'تملكني اعتقاد بأنني شخص عديم الجدوى',
+            'أفكر كثيرًا في الماضي',
+            'أعتقد أن الموت أحسن من الحياة',
+            'أعتقد بأن وجودي لا يترك أثرًا ذا قيمة',
+            'أرى بأن حياتي تفتقد إلى هدف واضح',
+            'راودتني أفكار بإنهاء حياتي',
+            'أفسر الأخطاء الصغيرة على أنها دليل على فشلي',
+            'عانيت من صعوبة شديدة في الدخول في النوم رغم شعوري بالتعب',
+            'استيقظت في منتصف الليل أو في الصباح الباكر وعجزت عن العودة للنوم مجددًا',
+            'نمت لساعات طويلة ومع ذلك استيقظت وأنا أشعر بالخمول',
+            'فقدت رغبتي في تناول الطعام',
+            'شعرت بشراهة غير معتادة للأكل',
+            'نقص وزني أو زاد وزني بشكل واضح',
+            'شعرت بإنهاك جسدي وفقدان مطلق للطاقة رغم أنني لم أبذل مجهودًا كبيرًا',
+            'عانيت من آلام أو أوجاع جسدية متفرقة (كصداع أو آلام ظهر) ليس لها تفسير طبي واضح',
+            'شعرت بثقل شديد وصعوبة في تحريك أطرافي (يداي وقدمي)',
+            'لاحظت تراجعًا في الرغبة الجنسية مقارنة بمستواي المعتاد',
+            'شعرت باضطرابات في جهازي الهضمي (كالغثيان أو الإمساك المستمر)',
+            'أبقى في فراشي لوقت طويل',
+            'أبديت ردود فعل جامدة تجاه المواقف التي كانت تستدعي مني استجابة سلوكية سريعة',
+            'أصبحت أؤجل كل المهام والمسؤوليات إلى أن تتراكم عليّ',
+            'أدائي أو إنتاجيتي في تراجع بشكل ملحوظ',
+            'تهاونت في مظهري الخارجي (اللبس، التنسيق...)',
+            'أهملت نظافتي الشخصية بشكل غير معتاد بالنسبة لي',
+            'استجاباتي بطيئة',
+            'انسحبت من التفاعلات الاجتماعية',
+            'تجنبت الرد على الاتصالات أو لقاء الأصدقاء',
+            'وجدت نفسي أقوم بحركات لا إرادية',
+            'انحصر نشاطي الحركي في مساحة محدودة (كالبقاء في غرفة واحدة) لمعظم اليوم',
+            'لاحظت أنا أو المقربون مني أن نبرة صوتي أصبحت خالية من التعابير الانفعالية',
+            'عجزت عن اتخاذ المبادرة لبدء أي نشاط جديد',
+            'أتكاسل عن أداء المهام الروتينية الأساسية (مثل إعداد الطعام أو ترتيب المكان...)',
+            'لاحظت كثرة تنهدي أو زفيري بشكل غير معتاد',
+            'أجد صعوبة في مغادرة المنزل حتى عندما يكون ذلك ضروريًا',
+            'أجلت الرد على الرسائل أو المكالمات رغم أهميتها',
+            'قضيت وقتًا طويلاً دون القيام بأي نشاط ذي معنى'
+        ];
+        const LABELS = { 1: 'يوميًا تقريبًا', 2: 'نصف الأيام', 3: 'أيام قليلة فقط', 4: 'لم يحدث أبدًا' };
+
+        const AP = JSON.parse(backendStorage.getItem('diagActivePatient') || 'null');
+        const ptKey = base => AP ? base + '_' + AP.id : base;
+
+        const ACTIVE = backendStorage.getItem(ptKey('activeChartTest')) === 'mdd' ? 'mdd' : 'ptsd';
+        const ITEMS = ACTIVE === 'mdd' ? ITEMS_MDD : ITEMS94;
+        const MAX_SCORE = ITEMS.length * 4;
+        const MID_START = Math.ceil(MAX_SCORE / 2) + 1;
+        const HIGH_START = Math.ceil(MAX_SCORE * 0.75) + 1;
+        const SESSION_KEY = ptKey(ACTIVE === 'mdd' ? 'diagSessionsMddV2' : 'diagSessionsV2');
+        const SEEDS = ACTIVE === 'mdd'
+            ? [[1, '01/07/2026', 78], [2, '12/07/2026', 96], [3, '19/07/2026', 132], [4, '26/07/2026', 160]]
+            : [[1, '01/07/2026', 112], [2, '12/07/2026', 158], [3, '19/07/2026', 224], [4, '26/07/2026', 271]];
+        document.getElementById('chartTestName').textContent =
+            (AP ? AP.name + ' — ' : 'محمد عبد الله — ') +
+            (ACTIVE === 'mdd' ? 'مقياس الاكتئاب (MDD)' : 'مقياس الطلبة لاضطراب ما بعد الصدمة') + ' — الملف: ' + (AP ? AP.fileNum || '' : 'PT-2026-0135');
+
+        function makeTotalsSession(number, date, total) {
+            const extra = total - ITEMS.length;
+            const scores = new Array(ITEMS.length).fill(1);
+            for (let i = 0; i < extra; i++) scores[(i * 37) % ITEMS.length]++;
+            const answers = ITEMS.map((text, idx) => {
+                const score = scores[idx];
+                return { no: idx + 1, text: text, label: LABELS[score], score: score };
+            });
+            return {
+                number: number, date: date, total: total, max: MAX_SCORE,
+                avg: Math.round((total / answers.length) * 100) / 100,
+                pct: Math.round((total / MAX_SCORE) * 100),
+                state: total >= HIGH_START ? 'مرتفعة' : total >= MID_START ? 'متوسطة' : 'ضعيفة',
+                answers: answers
+            };
+        }
+
+        function seedSessions() {
+            if (backendStorage.getItem(SESSION_KEY) !== null) return;
+            backendStorage.setItem(SESSION_KEY, JSON.stringify(SEEDS.map(s => makeTotalsSession(s[0], s[1], s[2]))));
+        }
+        seedSessions();
+
+        const sessions = JSON.parse(backendStorage.getItem(SESSION_KEY) || '[]');
+
+        function render() {
+            document.getElementById('emptyBox').style.display = sessions.length ? 'none' : 'block';
+            if (!sessions.length) return;
+
+            const lastIdx = sessions.length - 1;
+            const totals = sessions.map(s => s.total);
+            const last = sessions[lastIdx];
+            const avgAll = Math.round(totals.reduce((x, y) => x + y, 0) / sessions.length);
+
+            document.getElementById('sumCount').textContent = sessions.length;
+            document.getElementById('chipCount').textContent = '🗓️ ' + sessions.length + ' جلسة';
+            document.getElementById('sumLast').textContent = last.total;
+            document.getElementById('sumLastMax').textContent = '(من ' + MAX_SCORE + ')';
+            document.getElementById('chipLast').textContent = '📈 آخر نتيجة: ' + last.total + ' / ' + MAX_SCORE;
+            document.getElementById('sumAvg').textContent = avgAll + ' / ' + MAX_SCORE;
+            document.getElementById('lgLow').textContent = '(' + (MAX_SCORE / 4) + '–' + (MID_START - 1) + ')';
+            document.getElementById('lgMid').textContent = '(' + MID_START + '–' + (HIGH_START - 1) + ')';
+            document.getElementById('lgHigh').textContent = '(' + HIGH_START + '–' + MAX_SCORE + ')';
+
+            renderLine();
+            renderInterpretation();
+        }
+
+        function renderInterpretation() {
+            const box = document.getElementById('interpBox');
+            if (!sessions.length) {
+                box.innerHTML = '<div class="interp-trend">لا توجد جلسات محفوظة بعد لعرض التفسير.</div>';
+                return;
+            }
+            let items = '';
+            sessions.forEach((s, i) => {
+                const prev = i > 0 ? sessions[i - 1].total : null;
+                const delta = prev === null ? null : s.total - prev;
+                let deltaTxt = '';
+                if (delta === null) deltaTxt = ' • الجلسة الأولى (بداية التتبع)';
+                else if (delta > 0) deltaTxt = ' • <b class="up">تحسّن (+' + delta + ')</b> مقارنة بالجلسة السابقة';
+                else if (delta < 0) deltaTxt = ' • <b class="down">تراجع (' + delta + ')</b> مقارنة بالجلسة السابقة';
+                else deltaTxt = ' • ثبات (0) مقارنة بالجلسة السابقة';
+                items += '<div class="interp-item"><span class="ii-num">ج' + s.number + '</span>' +
+                    '<span>الجلسة ' + s.number + ' (' + s.date + '): حصلت على <b>' + s.total + ' / ' + MAX_SCORE + '</b> — مستوى <b>' + s.state + '</b>' + deltaTxt + '</span></div>';
+            });
+            const first = sessions[0].total;
+            const last = sessions[sessions.length - 1].total;
+            const totalDelta = last - first;
+            let trend;
+            if (totalDelta > 0) trend = 'الاتجاه العام: <b>تصاعدي — تحسّن مستمر</b> (' + first + ' ← ' + last + '، أي +' + totalDelta + ' نقطة).';
+            else if (totalDelta < 0) trend = 'الاتجاه العام: <b>تنازلي — تراجع</b> (' + first + ' ← ' + last + ').';
+            else trend = 'الاتجاه العام: <b>ثابت</b> دون تغيّر ملحوظ بين الجلسات.';
+            box.innerHTML = items + '<div class="interp-trend">' + trend + '</div>';
+        }
+
+        function renderLine() {
+            const svg = document.getElementById('lineSvg');
+            const W = 720, H = 350, padL = 66, padR = 52, padT = 26, padB = 58;
+            const min = MAX_SCORE / 4, max = MAX_SCORE;
+            const iw = W - padL - padR, ih = H - padT - padB;
+            const yPos = v => padT + ih - ((v - min) / (max - min)) * ih;
+
+            const zones = [
+                { y1: yPos(MID_START - 1), y2: yPos(min), fill: '#fdecec', label: 'ضعيفة', color: '#b91c1c' },
+                { y1: yPos(HIGH_START - 1), y2: yPos(MID_START), fill: '#fdf3e0', label: 'متوسطة', color: '#b45309' },
+                { y1: yPos(max), y2: yPos(HIGH_START), fill: '#e4f8ee', label: 'مرتفعة', color: '#15803d' }
+            ];
+
+            let out = '';
+            zones.forEach(z => {
+                out += '<rect x="' + padL + '" y="' + z.y2 + '" width="' + iw + '" height="' + (z.y1 - z.y2) + '" fill="' + z.fill + '"/>';
+            });
+
+            const step = Math.max(10, Math.round((max - min) / 6 / 10) * 10);
+            for (let v = min; v <= max; v += step) {
+                const y = yPos(v);
+                out += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="#dbe4f5" stroke-dasharray="4 5"/>';
+                out += '<text x="' + (padL - 10) + '" y="' + (y + 4) + '" text-anchor="end" fill="#7f92b5" font-size="11">' + v + '</text>';
+            }
+
+            [MID_START - 1, HIGH_START - 1].forEach(v => {
+                const y = yPos(v);
+                out += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="#12294e" stroke-width="1.5" stroke-dasharray="3 6"/>';
+            });
+            zones.forEach(z => {
+                out += '<text x="' + (W - padR + 8) + '" y="' + ((z.y1 + z.y2) / 2 + 4) + '" fill="' + z.color + '" font-size="12.5" font-weight="700">' + z.label + '</text>';
+            });
+
+            const n = sessions.length;
+            const stepX = n > 1 ? iw / (n - 1) : 0;
+            let line = '', area = '', dots = '', labels = '';
+            let px0 = 0, pxN = 0;
+            sessions.forEach((s, i) => {
+                const x = padL + (n > 1 ? i * stepX : iw / 2);
+                const y = yPos(s.total);
+                if (i === 0) px0 = x;
+                if (i === n - 1) pxN = x;
+                line += (i ? ' ' : '') + x + ',' + y;
+                dots += '<circle class="dot' + (i === n - 1 ? ' latest' : '') + '" cx="' + x + '" cy="' + y + '" r="6">' +
+                    '<title>الجلسة ' + s.number + ' — ' + s.date + ': ' + s.total + '</title></circle>';
+                labels += '<text class="tval" x="' + x + '" y="' + (y - 12) + '">' + s.total + '</text>' +
+                    '<text x="' + x + '" y="' + (H - 22) + '">جلسة ' + s.number + '</text>' +
+                    '<text x="' + x + '" y="' + (H - 36) + '" font-size="10" fill="#93a6c9">' + s.date + '</text>';
+            });
+            area = px0 + ',' + (yPos(min)) + ' ' + line + ' ' + pxN + ',' + (yPos(min));
+
+            svg.innerHTML =
+                '<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">' +
+                '<stop offset="0%" stop-color="#2563eb" stop-opacity="0.35"/>' +
+                '<stop offset="100%" stop-color="#2563eb" stop-opacity="0.02"/>' +
+                '</linearGradient></defs>' +
+                '<polygon class="area" points="' + area + '"/>' +
+                '<polyline class="poly" points="' + line + '"/>' + dots + labels;
+        }
+
+        function renderList() {
+            const box = document.getElementById('sessionsList');
+            box.innerHTML = '';
+            sessions.forEach((s, i) => {
+                const lastIdx = sessions.length - 1;
+                const card = document.createElement('div');
+                card.className = 'session-card' + (i === lastIdx ? ' latest' : '');
+                card.innerHTML =
+                    '<div class="sc-num">' + s.number + '</div>' +
+                    '<div class="sc-info"><b>الجلسة ' + s.number + ' — ' + s.date + '</b><span>المجموع: ' + s.total + ' / ' + s.max +
+                    ' • المتوسط لكل عبارة: ' + s.avg + ' / 4 • النسبة: ' + s.pct + '%</span></div>' +
+                    '<span class="state-badge ' + (STATECLS[s.state] || 'st-mid') + '">' + s.state + '</span>' +
+                    '<button class="view-answers" data-i="' + i + '">👁 الاطلاع على الاختيارات السابقة</button>';
+                box.appendChild(card);
+            });
+            box.querySelectorAll('.view-answers').forEach(btn => {
+                btn.addEventListener('click', () => openModal(parseInt(btn.dataset.i)));
+            });
+        }
+
+        function openModal(i) {
+            const s = sessions[i];
+            document.getElementById('mTitle').textContent = '👁 اختيارات الجلسة ' + s.number + ' — ' + s.date;
+            document.getElementById('mSub').textContent = 'المجموع: ' + s.total + ' / ' + s.max + ' • الحالة: ' + s.state;
+            document.getElementById('mBody').innerHTML = s.answers.map(a =>
+                '<div class="mi"><span class="mi-no">' + a.no + '</span><span class="mi-text">' + a.text +
+                '</span><span class="mi-ans">' + a.label + ' (' + a.score + ')</span></div>'
+            ).join('');
+            document.getElementById('answersModal').classList.add('show');
+        }
+
+        document.getElementById('mClose').addEventListener('click', () => {
+            document.getElementById('answersModal').classList.remove('show');
+        });
+        document.getElementById('answersModal').addEventListener('click', e => {
+            if (e.target === e.currentTarget) e.currentTarget.classList.remove('show');
+        });
+
+        const notesArea = document.getElementById('notesArea');
+        notesArea.value = backendStorage.getItem(ptKey('diagNotes')) || '';
+        document.getElementById('notesSaveBtn').addEventListener('click', () => {
+            backendStorage.setItem(ptKey('diagNotes'), notesArea.value);
+            const ok = document.getElementById('saveOk');
+            ok.style.display = 'block';
+            setTimeout(() => { ok.style.display = 'none'; }, 3000);
+        });
+
+        render();
+        renderList();
+    
+});</script>
+
+    <script>window.backendReady.then(() => {
+
+        (function () {
+            const btn = document.querySelector('.nav-actions .btn-purple');
+            if (!btn) return;
+            const u = JSON.parse(backendStorage.getItem('diagUser') || 'null');
+            if (u) {
+                btn.innerHTML = (u.isAdmin ? '👨‍💼' : '👤') + ' ' + (u.isAdmin ? 'المدير' : u.name);
+                btn.style.background = '#e9f1ff';
+                btn.style.color = '#2563eb';
+                btn.style.border = '1.5px solid #2563eb';
+                btn.onclick = () => {
+                    if (confirm('هل تريد تسجيل الخروج من حسابك؟')) {
+                        backendLogout();
+                    }
+                };
+            } else {
+                btn.onclick = () => { location.href = 'login.html'; };
+            }
+        })();
+    
+});</script>
+
+</body>
+</html>
