@@ -86,5 +86,65 @@
       if (!control.id) control.id = `diag-field-${index + 1}`;
       if (!label.htmlFor) label.htmlFor = control.id;
     });
+
+    const iconMap = {
+      "🏠": "home", "🔬": "microscope", "🩺": "stethoscope", "💰": "coins",
+      "👤": "user", "👥": "users", "👨‍💼": "briefcase", "💼": "briefcase",
+      "💾": "save", "📈": "trend", "📊": "chart", "📋": "clipboard",
+      "📭": "inbox", "🎯": "target", "👁": "eye", "🕘": "clock",
+      "🗓": "calendar", "⚡": "bolt", "🌧": "rain", "🔍": "search",
+      "🧠": "brain", "📝": "file", "📄": "file", "🤖": "bot",
+      "🔐": "lock", "🔒": "lock", "📁": "folder", "💡": "light",
+      "💳": "card", "🧾": "receipt", "❤": "heart", "🌱": "leaf",
+      "🏆": "award", "🧪": "flask", "⚙": "settings", "🧮": "calculator",
+      "✅": "check", "✓": "check", "✔": "check", "✕": "close", "⚠": "warning",
+      "🔵": "circle", "🟢": "circle", "🟣": "circle", "🔴": "circle", "🟠": "circle"
+    };
+    const iconTone = { "🔵": "blue", "🟢": "green", "🟣": "purple", "🔴": "red", "🟠": "orange" };
+    const iconPattern = new RegExp("(" + Object.keys(iconMap).sort(function (a, b) { return b.length - a.length; }).join("|") + ")(?:\\uFE0F)?", "g");
+
+    function replaceIcons(root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || parent.closest("script, style, svg, textarea, input")) return NodeFilter.FILTER_REJECT;
+          iconPattern.lastIndex = 0;
+          return iconPattern.test(node.data) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function (node) {
+        const fragment = document.createDocumentFragment();
+        let cursor = 0;
+        iconPattern.lastIndex = 0;
+        let match;
+        while ((match = iconPattern.exec(node.data))) {
+          if (match.index > cursor) fragment.append(node.data.slice(cursor, match.index));
+          const raw = match[1];
+          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute("class", "ui-symbol" + (iconTone[raw] ? " ui-symbol--" + iconTone[raw] : ""));
+          svg.setAttribute("aria-hidden", "true");
+          svg.setAttribute("focusable", "false");
+          const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+          use.setAttribute("href", "ui-icons.svg#" + iconMap[raw]);
+          svg.append(use);
+          fragment.append(svg);
+          cursor = match.index + match[0].length;
+        }
+        if (cursor < node.data.length) fragment.append(node.data.slice(cursor));
+        node.replaceWith(fragment);
+      });
+    }
+
+    replaceIcons(document.body);
+    new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(function (node) {
+          if (node.nodeType === Node.TEXT_NODE && node.parentElement) replaceIcons(node.parentElement);
+          else if (node.nodeType === Node.ELEMENT_NODE) replaceIcons(node);
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
   });
 })();
