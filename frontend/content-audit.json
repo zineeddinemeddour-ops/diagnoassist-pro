@@ -1,0 +1,42 @@
+[
+  {
+    "page": "index.html",
+    "preservedWords": 269
+  },
+  {
+    "page": "login.html",
+    "preservedWords": 89
+  },
+  {
+    "page": "register.html",
+    "preservedWords": 116
+  },
+  {
+    "page": "pricing.html",
+    "preservedWords": 211
+  },
+  {
+    "page": "payment.html",
+    "preservedWords": 148
+  },
+  {
+    "page": "patient.html",
+    "preservedWords": 305
+  },
+  {
+    "page": "diagnosis.html",
+    "preservedWords": 154
+  },
+  {
+    "page": "results.html",
+    "preservedWords": 181
+  },
+  {
+    "page": "test.html",
+    "preservedWords": 157
+  },
+  {
+    "page": "charts.html",
+    "preservedWords": 195
+  }
+]

@@ -1,0 +1,142 @@
+<!doctype html>
+
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>نتيجة التحليل | DIAGNO-ASSIST</title><link rel="icon" type="image/svg+xml" href="brand.svg"><link rel="stylesheet" href="design.css?v=20260905"><script src="runtime.js?v=20260905" defer=""></script><script src="pages/results.js?v=20260905" defer=""></script></head>
+<body class="workspace-site page-results" data-page="results"><aside class="site-navigation">
+        <a class="nav-brand" href="index.html">
+            <img src="brand.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg></span> الرئيسية</a>
+            <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#microscope"></use></svg></span> كيف يعمل</a>
+            <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#stethoscope"></use></svg></span> المميزات</a>
+            <a href="pricing.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg></span> الأسعار</a>
+        </div>
+        
+    <div class="workflow-navigation">
+        <a href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg>الرئيسية</a>
+        
+        <a href="pricing.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg>الأسعار</a>
+        
+        <a href="payment.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#card"></use></svg>الدفع</a>
+        
+        <a href="patient.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg>ملف المريض</a>
+        
+        <a href="diagnosis.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#brain"></use></svg>التشخيص</a>
+        
+        <a href="results.html" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#clipboard"></use></svg>النتيجة</a>
+    </div></aside><div class="workspace-stage"><header class="workspace-toolbar"><h1>نتيجة <span class="grad">التحليل</span></h1><div class="nav-actions">
+            <button class="btn-purple" type="button">تسجيل الدخول</button>
+        </div></header><main class="workspace-content"><div class="res-wrap">
+        <div class="res-title">
+            
+            <p>اختيار تلقائي لاضطراب واحد فقط بعد قراءة الأعراض المدخلة</p>
+        </div>
+
+        <div class="no-box" id="noResult" style="display:none">
+            <span class="big-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#inbox"></use></svg></span>
+            <p>لا توجد نتيجة بعد — أدخل أعراض المريض أولًا من صفحة التشخيص.</p>
+            <a class="btn-page" href="diagnosis.html" style="display:inline-block">→ الذهاب للتشخيص</a>
+        </div>
+
+        <div id="resContent">
+            <div class="patient-strip">
+                <div class="p-avatar">م</div>
+                <div class="p-info">
+                    <b>محمد عبد الله</b><br>
+                    <span>28 سنة — ذكر — جامعي — معلم</span>
+                </div>
+                <div class="p-date" id="resDate">—</div>
+            </div>
+
+            <div class="main-diag">
+                <div class="md-circle">
+                    <b id="mdPct">—</b>
+                    <small>التطابق</small>
+                </div>
+                <div class="md-text">
+                    <h2 id="mdName">—</h2>
+                    <p id="mdDesc">—</p>
+                    <span class="md-badge" id="mdBadge">—</span>
+                </div>
+            </div>
+
+            <div class="differential">
+                <h3><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#brain"></use></svg> التشخيص المختار تلقائيًا (اضطراب واحد فقط)</h3>
+                <div class="diag-row">
+                    <div class="d-top">
+                        <span class="d-name"><span class="rank"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#check"></use></svg></span><span id="wName">—</span></span>
+                        <span class="d-per" id="wPct">—</span>
+                    </div>
+                    <div class="d-bar"><i id="wBar" style="width:0%"></i></div>
+                    <div class="d-text" id="wText">—</div>
+                    <div class="kw-box" id="wKw"></div>
+                </div>
+                <div id="diffList"></div>
+                <div class="other-note" id="otherNote"></div>
+            </div>
+
+            <div class="choose-test">
+                <h3><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#flask"></use></svg> الرجاء اختيار الاضطراب المراد تطبيق اختباره (المختار تلقائيًا + زمرته المشابهة)</h3>
+                <div class="sel-list" id="selList"></div>
+                <a class="btn-test" href="test.html" id="testLink">تطبيق الاختبار ←</a>
+            </div>
+
+            <div class="res-actions">
+                <a class="btn-ghost-page" href="diagnosis.html">→ رجوع للتشخيص</a>
+                <a class="btn-page dim" href="charts.html" id="chartsLink"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#chart"></use></svg> حفظ في الملف وعرض الرسوم</a>
+            </div>
+            <div class="chart-hint" id="chartHint" style="display:none">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#lock"></use></svg> زر الرسوم البيانية مقفول — يجب إكمال الاختبار وحفظ الملف أولًا من صفحة الاختبار.
+            </div>
+
+            <div class="disclaimer">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#warning"></use></svg> هذه النتيجة استرشادية مبنية على مطابقة الكلمات المفتاحية للأعراض المدخلة ولا تُغني عن التقييم السريري من طرف أخصائي الصحة النفسية.
+            </div>
+        </div>
+    </div></main><footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="brand.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="index.html#intro">من نحن</a>
+                <a href="index.html#workflow">مميزات المنصة</a>
+                <a href="index.html#workflow">كيف يعمل</a>
+                <a href="pricing.html">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="index.html#questions">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="index.html#workflow">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer></div></body>
+</html>

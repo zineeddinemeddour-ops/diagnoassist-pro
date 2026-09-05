@@ -1,0 +1,202 @@
+<!doctype html>
+
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ملف المريض | DIAGNO-ASSIST</title><link rel="icon" type="image/svg+xml" href="brand.svg"><link rel="stylesheet" href="design.css?v=20260905"><script src="runtime.js?v=20260905" defer=""></script><script src="pages/patient.js?v=20260905" defer=""></script></head>
+<body class="workspace-site page-patient" data-page="patient"><aside class="site-navigation">
+        <a class="nav-brand" href="index.html">
+            <img src="brand.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg></span> الرئيسية</a>
+            <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#microscope"></use></svg></span> كيف يعمل</a>
+            <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#stethoscope"></use></svg></span> المميزات</a>
+            <a href="pricing.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg></span> الأسعار</a>
+        </div>
+        
+    <div class="workflow-navigation">
+        <a href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg>الرئيسية</a>
+        
+        <a href="pricing.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg>الأسعار</a>
+        
+        <a href="payment.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#card"></use></svg>الدفع</a>
+        
+        <a href="patient.html" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg>ملف المريض</a>
+    </div></aside><div class="workspace-stage"><header class="workspace-toolbar"><h1>ملف <span class="grad">المريض</span></h1><div class="nav-actions">
+            <button class="pt-list-btn" id="patientsListBtn" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg> المرضى</button>
+            <button class="btn-purple" type="button">تسجيل الدخول</button>
+        </div></header><main class="workspace-content"><div class="patient-wrap">
+        <div class="patient-title">
+            
+            <p id="activeChip">أدخل بيانات المريض لبدء أول جلسة تشخيص</p>
+            <button class="pt-list-btn" id="patientsListBtn2" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg> قائمة المرضى</button>
+        </div>
+
+        <div class="patient-toggle">
+            <button class="pt-btn active" id="ptRegistered" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#user"></use></svg> مريض مسجل</button>
+            <button class="pt-btn" id="ptNew" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#plus"></use></svg> مريض جديد</button>
+        </div>
+
+        <div class="patient-card"><aside class="patient-summary"><div class="patient-head">
+                <div class="avatar">م</div>
+                <div>
+                    <div class="p-name">محمد عبد الله</div>
+                    <div class="p-sub">ملف مريض — قابل للتعديل دائمًا</div>
+                </div>
+                <span class="file-num">ملف رقم: PT-2026-0135</span>
+            </div><div class="field full">
+                        <label>سجل الزيارات</label>
+                        <div class="visits">
+                            <div class="visit">
+                                <span class="v-date">12/07/2026</span>
+                                <div class="v-body">
+                                    <b>الزيارة الأولى</b>
+                                    <p>حضر المريض في الموعد وبدا متعاونًا ومنفتحًا. أبدى رغبة في المساعدة مع تردد عند تفاصيل الحادث. تم بناء علاقة تواصل أولية وشرح آلية المنصة، ووافق على المتابعة الأسبوعية.</p>
+                                </div>
+                            </div>
+                            <div class="visit">
+                                <span class="v-date">19/07/2026</span>
+                                <div class="v-body">
+                                    <b>الزيارة الثانية</b>
+                                    <p>طُبّق اختبار اضطراب ما بعد الصدمة، وتم تحديد أهداف علاجية مشتركة. بدأ استعراض تقنيات الاسترخاء الانفعالي وأساسيات التنظيم العاطفي.</p>
+                                </div>
+                            </div>
+                            <div class="visit">
+                                <span class="v-date">26/07/2026</span>
+                                <div class="v-body">
+                                    <b>الزيارة الثالثة</b>
+                                    <p>تحسّن ملحوظ في جودة النوم. المريض أكثر قدرة على مواجهة المذكّرات. تمت مراجعة السجل والرسوم البيانية معًا، وتحديد موعد الجلسة القادمة.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div></aside><div class="patient-body">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="field-1">الاسم الكامل للمريض</label>
+                        <input value="محمد عبد الله" id="field-1">
+                    </div>
+                    <div class="field">
+                        <label for="field-2">رقم الهاتف</label>
+                        <input value="0550 12 34 56" style="direction:ltr; text-align:left" id="field-2">
+                    </div>
+                    <div class="field">
+                        <label for="field-3">تاريخ الميلاد</label>
+                        <input value="15/03/1998" style="direction:ltr; text-align:left" id="field-3">
+                    </div>
+                    <div class="field">
+                        <label for="field-4">العمر</label>
+                        <input value="28 سنة" style="direction:ltr; text-align:left" id="field-4">
+                    </div>
+                    <div class="field">
+                        <label for="field-5">الجنس</label>
+                        <select id="field-5">
+                            <option selected="">ذكر</option>
+                            <option>أنثى</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="field-6">الحالة الاجتماعية</label>
+                        <select id="field-6">
+                            <option selected="">أعزب</option>
+                            <option>متزوج</option>
+                            <option>مطلق</option>
+                            <option>أرمل</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="field-7">المستوى التعليمي</label>
+                        <select id="field-7">
+                            <option>ابتدائي</option>
+                            <option>متوسط</option>
+                            <option>ثانوي</option>
+                            <option selected="">جامعي</option>
+                            <option>دراسات عليا</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="field-8">المهنة</label>
+                        <input value="معلم" id="field-8">
+                    </div>
+                    <div class="field">
+                        <label for="field-9">العنوان</label>
+                        <input value="الجزائر العاصمة، الجزائر" id="field-9">
+                    </div>
+                    <div class="field">
+                        <label for="field-10">البريد الإلكتروني</label>
+                        <input value="mohamed.eljems@gmail.com" style="direction:ltr; text-align:left" id="field-10">
+                    </div>
+                    <div class="field full">
+                        <label for="field-11">السبب الرئيسي للزيارة</label>
+                        <textarea id="field-11">تعرض لصدمة نفسية مؤخرًا، ويعاني من مشاعر وذكريات متعلقة بها كالقلق الشديد والاسترجاع المتكرر للموقف الصادم، مع صعوبة في النوم والتركيز.</textarea>
+                    </div>
+                    <div class="field full">
+                        <label for="field-12">ملاحظات إضافية</label>
+                        <textarea id="field-12">لا تاريخ سابق للأمراض النفسية — أول استشارة على المنصة. يُلاحظ تجنب المواقف المذكّرة بالحادث، وتراجع الاهتمام بالأنشطة اليومية منذ ثلاثة أسابيع. يُنصح بتقييم شامل والتخطيط لجلسات دعم نفسي متدرجة.</textarea>
+                    </div>
+                    
+                </div>
+
+                
+
+        
+    </div><div class="patient-actions">
+                    <a class="btn-back" href="payment.html">→ رجوع</a>
+                    <button class="btn-save ghost2" id="savePatientBtn" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#save"></use></svg> حفظ في قائمة المرضى</button>
+                    <a class="btn-save ghost2" href="charts.html" id="patientChartsBtn"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#chart"></use></svg> رسوم هذا الملف</a>
+                    <button class="btn-save" id="startDiagBtn" type="button">حفظ الملف وبدء التشخيص</button>
+                </div><div class="note">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#light"></use></svg> هذا النموذج مملوء ببيانات تجريبية من طرف المنصة — يمكنك تعديل أي حقل قبل الحفظ. سيُحفظ كل شيء في سجل المريض ويتحدّث مع كل جلسة.
+        </div></div>
+    </div></main><footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="brand.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="index.html#intro">من نحن</a>
+                <a href="index.html#workflow">مميزات المنصة</a>
+                <a href="index.html#workflow">كيف يعمل</a>
+                <a href="pricing.html">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="index.html#questions">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="index.html#workflow">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer></div><div class="patients-modal" id="patientsModal">
+        <div class="pm-box">
+            <div class="pm-head">
+                <h3><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg> قائمة المرضى</h3>
+                <button class="pm-close" id="pmClose" type="button" aria-label="إغلاق"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#close"></use></svg></button>
+            </div>
+            <div class="pm-list" id="pmList"></div>
+        </div>
+    </div></body>
+</html>

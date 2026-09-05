@@ -1,0 +1,163 @@
+<!doctype html>
+
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>الرسوم البيانية | DIAGNO-ASSIST</title><link rel="icon" type="image/svg+xml" href="brand.svg"><link rel="stylesheet" href="design.css?v=20260905"><script src="runtime.js?v=20260905" defer=""></script><script src="pages/charts.js?v=20260905" defer=""></script></head>
+<body class="workspace-site page-charts" data-page="charts"><aside class="site-navigation">
+        <a class="nav-brand" href="index.html">
+            <img src="brand.svg" alt="DIAGNO-ASSIST">
+            <div class="brand-text">
+                <span class="brand-name">DIAGNO-ASSIST</span>
+                <span class="brand-sub">للأخصائيين النفسانيين</span>
+            </div>
+        </a>
+        <div class="nav-links">
+            <a href="index.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg></span> الرئيسية</a>
+            <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#microscope"></use></svg></span> كيف يعمل</a>
+            <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#stethoscope"></use></svg></span> المميزات</a>
+            <a href="pricing.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg></span> الأسعار</a>
+        </div>
+        
+    <div class="workflow-navigation">
+        <a href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg>الرئيسية</a>
+        
+        <a href="patient.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg>ملف المريض</a>
+        
+        <a href="test.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#flask"></use></svg>الاختبار</a>
+        
+        <a href="charts.html" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#chart"></use></svg>الرسوم البيانية</a>
+    </div></aside><div class="workspace-stage"><header class="workspace-toolbar"><h1>لوحة <span class="grad">الرسوم البيانية</span></h1><div class="nav-actions">
+            <button class="btn-purple" type="button">تسجيل الدخول</button>
+        </div></header><main class="workspace-content"><div class="chart-wrap">
+        <div class="chart-title">
+            
+            <p>نتائج جلسات الاختبار — تتحدّث تلقائيًا مع كل جلسة جديدة</p>
+        </div>
+
+        <div class="pt-strip">
+            <div class="pi"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#chart"></use></svg></div>
+            <div>
+                <b>محمد عبد الله</b>
+                <span id="chartTestName">مقياس الطلبة لاضطراب ما بعد الصدمة — الملف: PT-2026-0135</span>
+            </div>
+            <div class="right">
+                <span class="pt-chip" id="chipCount"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#calendar"></use></svg> 0 جلسة</span>
+                <span class="pt-chip" id="chipLast"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#trend"></use></svg> آخر نتيجة: —</span>
+            </div>
+        </div>
+
+        <div class="sum-cards">
+            <div class="sum-card">
+                <div class="sc-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#calendar"></use></svg></div>
+                <div><b id="sumCount">0</b><small>الجلسات المخزنة في الملف</small></div>
+            </div>
+            <div class="sum-card">
+                <div class="sc-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#trend"></use></svg></div>
+                <div><b id="sumLast">—</b><small>نتيجة الجلسة الأخيرة <span id="sumLastMax">(من 376)</span></small></div>
+            </div>
+            <div class="sum-card">
+                <div class="sc-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#target"></use></svg></div>
+                <div><b id="sumAvg">—</b><small>متوسط نتائج جميع الجلسات</small></div>
+            </div>
+        </div>
+
+        
+
+        
+
+        
+
+        <div class="empty-box" id="emptyBox" style="display:none">
+            <span class="big-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#inbox"></use></svg></span>
+            لا توجد جلسات محفوظة بعد — أنشئ جلسة جديدة من
+            <a href="test.html">صفحة الاختبار</a> ثم احفظ الملف.
+        </div>
+    <div class="analytics-grid"><div class="card-block">
+            <div class="cb-head">
+                <div class="cb-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#trend"></use></svg></div>
+                <div>
+                    <h3>مخطط تطور الجلسات</h3>
+                    <small>الجلسة الأخيرة (جلسة 4) تتغيّر حسب الإجابات التي تُدخل من صفحة الاختبار</small>
+                </div>
+            </div>
+            <div class="chart-plot" tabindex="0" aria-label="الرسوم البيانية"><svg class="svgs" id="lineSvg" viewBox="0 0 720 350"></svg></div>
+            <div class="legend">
+                <span><i class="lg-red"></i> ضعيفة <span id="lgLow">(94–188)</span></span>
+                <span><i class="lg-orange"></i> متوسطة <span id="lgMid">(189–282)</span></span>
+                <span><i class="lg-green"></i> مرتفعة <span id="lgHigh">(283–376)</span></span>
+                <span><i class="lg-blue"></i> الخط البياني (النتيجة)</span>
+            </div>
+        </div><div class="card-block">
+            <div class="cb-head">
+                <div class="cb-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#clock"></use></svg></div>
+                <div>
+                    <h3>سجل الجلسات والاختيارات</h3>
+                    <small>اضغط أيقونة <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#eye"></use></svg> للاطلاع على الاختيارات السابقة لكل جلسة</small>
+                </div>
+            </div>
+            <div id="sessionsList"></div>
+        </div><div class="card-block">
+            <div class="cb-head">
+                <div class="cb-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#clipboard"></use></svg></div>
+                <div>
+                    <h3>تفسير النتائج وتجميع بيانات الجلسات</h3>
+                    <small>ملخص تلقائي يتحدّث مع كل جلسة جديدة</small>
+                </div>
+            </div>
+            <div id="interpBox"></div>
+            <textarea class="notes-area" id="notesArea" placeholder="اكتب هنا ملاحظاتك كأخصائي حول هذه الجلسات (الملاحظة على أخذ النتائج بتوجيه، خطة العلاج، موعد الجلسة القادمة...)..." aria-label="اكتب هنا ملاحظاتك كأخصائي حول هذه الجلسات (الملاحظة على أخذ النتائج بتوجيه، خطة العلاج، موعد الجلسة القادمة...)..."></textarea>
+            <button class="btn-notes-save" id="notesSaveBtn" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#save"></use></svg> حفظ الملاحظات في الملف</button>
+            <div class="save-ok" id="saveOk" style="display:none"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#check"></use></svg> تم حفظ الملاحظات في الملف بنجاح.</div>
+        </div></div></div></main><footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <img src="brand.svg" alt="DIAGNO-ASSIST">
+                    <div>
+                        <span class="brand-name">DIAGNO-ASSIST</span>
+                        <span class="brand-sub">للأخصائيين النفسانيين</span>
+                    </div>
+                </div>
+                <p>منصة رقمية متكاملة لمساعدتك في التشخيص والاختبارات وتتبع رحلة تعافي مرضاك.</p>
+            </div>
+            <div class="footer-col">
+                <h4>عن المنصة</h4>
+                <a href="index.html#intro">من نحن</a>
+                <a href="index.html#workflow">مميزات المنصة</a>
+                <a href="index.html#workflow">كيف يعمل</a>
+                <a href="pricing.html">الأسعار</a>
+                <a href="#">وظائف</a>
+            </div>
+            <div class="footer-col">
+                <h4>المساعدة والدعم</h4>
+                <a href="index.html#questions">الأسئلة الشائعة</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">مركز المساعدة</a>
+                <a href="index.html#workflow">دليل الاستخدام</a>
+                <a href="#">الحالة التقنية</a>
+            </div>
+            <div class="footer-col">
+                <h4>البنود القانونية</h4>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">سياسة ملفات تعريف الارتباط</a>
+                <a href="#">إخلاء المسؤولية الطبية</a>
+                <a href="#">سياسة الاسترداد</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 DIAGNO-ASSIST — جميع الحقوق محفوظة
+        </div>
+    </footer></div><div class="modal" id="answersModal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <div style="font-size:26px;"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#eye"></use></svg></div>
+                <div>
+                    <b id="mTitle">اختيارات الجلسة</b>
+                    <span id="mSub">—</span>
+                </div>
+                <button id="mClose" type="button" aria-label="إغلاق"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#close"></use></svg></button>
+            </div>
+            <div class="modal-body" id="mBody"></div>
+        </div>
+    </div></body>
+</html>
