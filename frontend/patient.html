@@ -1,7 +1,7 @@
 <!doctype html>
 
 <html lang="ar" dir="rtl">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ملف المريض | DIAGNO-ASSIST</title><meta name="theme-color" content="#087568"><link rel="icon" type="image/svg+xml" href="brand.svg"><link rel="stylesheet" href="design.css?v=20260905"><link rel="stylesheet" href="modern.css?v=20260905-3d1"><script src="runtime.js?v=20260905" defer=""></script><script src="motion.js?v=20260905-3d1" defer=""></script><script src="pages/patient.js?v=20260905" defer=""></script></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ملف المريض | DIAGNO-ASSIST</title><meta name="theme-color" content="#087568"><link rel="icon" type="image/svg+xml" href="brand.svg"><link rel="stylesheet" href="design.css?v=20260905"><link rel="stylesheet" href="modern.css?v=20260905-3d2"><script src="runtime.js?v=20260905" defer=""></script><script src="motion.js?v=20260905-3d2" defer=""></script><script src="pages/patient.js?v=20260905" defer=""></script></head>
 <body class="workspace-site page-patient" data-page="patient"><aside class="site-navigation">
         <a class="nav-brand" href="index.html">
             <img src="brand.svg" alt="DIAGNO-ASSIST">
@@ -16,21 +16,21 @@
             <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#stethoscope"></use></svg></span> المميزات</a>
             <a href="pricing.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg></span> الأسعار</a>
         </div>
-        
+
     <div class="workflow-navigation">
         <a href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg>الرئيسية</a>
-        
+
         <a href="pricing.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg>الأسعار</a>
-        
+
         <a href="payment.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#card"></use></svg>الدفع</a>
-        
+
         <a href="patient.html" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg>ملف المريض</a>
     </div></aside><div class="workspace-stage"><header class="workspace-toolbar"><h1>ملف <span class="grad">المريض</span></h1><div class="nav-actions">
             <button class="pt-list-btn" id="patientsListBtn" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg> المرضى</button>
             <button class="btn-purple" type="button">تسجيل الدخول</button>
         </div></header><main class="workspace-content"><div class="patient-wrap">
         <div class="patient-title">
-            
+
             <p id="activeChip">أدخل بيانات المريض لبدء أول جلسة تشخيص</p>
             <button class="pt-list-btn" id="patientsListBtn2" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg> قائمة المرضى</button>
         </div>
@@ -136,12 +136,12 @@
                         <label for="field-12">ملاحظات إضافية</label>
                         <textarea id="field-12">لا تاريخ سابق للأمراض النفسية — أول استشارة على المنصة. يُلاحظ تجنب المواقف المذكّرة بالحادث، وتراجع الاهتمام بالأنشطة اليومية منذ ثلاثة أسابيع. يُنصح بتقييم شامل والتخطيط لجلسات دعم نفسي متدرجة.</textarea>
                     </div>
-                    
+
                 </div>
 
-                
 
-        
+
+
     </div><div class="patient-actions">
                     <a class="btn-back" href="payment.html">→ رجوع</a>
                     <button class="btn-save ghost2" id="savePatientBtn" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#save"></use></svg> حفظ في قائمة المرضى</button>
@@ -198,5 +198,5 @@
             </div>
             <div class="pm-list" id="pmList"></div>
         </div>
-    </div></body>
+    </div><button id="motionToggle" class="motion-toggle" type="button" aria-label="إيقاف الحركة" aria-pressed="false" title="إيقاف الحركة"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#pause"></use></svg><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#play"></use></svg></button></body>
 </html>

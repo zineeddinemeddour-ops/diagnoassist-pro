@@ -17,6 +17,13 @@ for(const file of htmlFiles){
   assert.equal(nodes.filter(n=>n.tag==='h1').length,1,`${file}: one page heading`);
   assert.equal(nodes.find(n=>n.tag==='html').attrs.dir,'rtl');
   assert.equal(nodes.filter(n=>n.tag==='main').length,1);
+  assert(ids.includes('motionToggle'),`${file}: looping motion has a pause control`);
+  if(file==='index.html'){
+    const pictures=nodes.filter(n=>n.tag==='img'&&n.attrs.class?.split(/\s+/).includes('art3d')).map(n=>n.attrs.src);
+    assert.equal(pictures.length,9,'Homepage has three hero and six workflow illustrations');
+    assert.equal(new Set(pictures).size,9,'Every homepage 3D illustration has a distinct role and image');
+    assert.equal(nodes.filter(n=>n.tag==='a'&&n.attrs.class?.split(/\s+/).includes('step')).length,6,'All workflow steps are navigable');
+  }
   for(const n of nodes){
     if(['script','link','img','a','use'].includes(n.tag)){
       const ref=n.attrs.src||n.attrs.href;
@@ -75,6 +82,29 @@ await events['loginBtn:click']();assert.equal(state.getItem('diagUser'),null);
 fields.loginPass.value=demoValues.regPass;
 await events['loginBtn:click']();assert.equal(JSON.parse(state.getItem('diagUser')).username,'demouser');
 await events['regBtn:click']();assert.equal(JSON.parse(state.getItem('diagUsers')).length,1);
+
+// Check user control and browser-preference behavior without browser automation.
+const motionClasses=new Set(),toggleHandlers=[],documentEvents={},preferenceEvents={};
+const reduced={matches:false,addEventListener:(type,handler)=>{preferenceEvents[type]=handler;}};
+const motionToggle={attrs:{},setAttribute(name,value){this.attrs[name]=value;},addEventListener:(type,handler)=>{if(type==='click')toggleHandlers.push(handler);}};
+const motionDocument={readyState:'complete',hidden:false,
+  documentElement:{classList:{toggle(name,on){if(on)motionClasses.add(name);else motionClasses.delete(name);}}},
+  getElementById:()=>motionToggle,querySelector:()=>null,querySelectorAll:()=>[],
+  addEventListener:(type,handler)=>{documentEvents[type]=handler;}};
+const motionContext=vm.createContext({document:motionDocument,localStorage:storage(new Map()),matchMedia:query=>query.includes('reduced-motion')?reduced:{matches:false,addEventListener:()=>{}},addEventListener:()=>{}});
+motionContext.window=motionContext;
+vm.runInContext(fs.readFileSync(path.join(root,'motion.js'),'utf8'),motionContext);
+assert.equal(motionToggle.attrs['aria-pressed'],'false');
+toggleHandlers.forEach(handler=>handler());
+assert.equal(motionToggle.attrs['aria-pressed'],'true');
+assert(motionClasses.has('motion-paused'));
+assert.equal(motionContext.localStorage.getItem('diagnoassist-motion-paused'),'true');
+toggleHandlers.forEach(handler=>handler());
+assert.equal(motionToggle.attrs['aria-pressed'],'false');
+reduced.matches=true;preferenceEvents.change();
+assert.equal(motionToggle.disabled,true);assert(motionClasses.has('reduced-motion'));
+motionDocument.hidden=true;documentEvents.visibilitychange();assert(motionClasses.has('tab-hidden'));
 console.log(`PASS: ${htmlFiles.length} RTL routes, ${references} asset/page references, ${scripts.length} scripts, ${handlers} inline handlers.`);
 console.log('PASS: content parity, local-only state, per-user state isolation, registration, login, duplicate-account validation, logout, and no plaintext password storage.');
+console.log('PASS: unique homepage illustrations, navigable workflow, animation pause/resume, remembered motion preference, reduced motion, and hidden-tab pausing.');
 console.log('No browser or visual tests were run. The original placeholder footer links remain unchanged.');

@@ -54,7 +54,8 @@ const pattern=new RegExp('('+Object.keys(iconMap).sort((a,b)=>b.length-a.length)
 const icon=name=>el('svg',{class:'icon',viewBox:'0 0 24 24','aria-hidden':'true',focusable:'false'},[el('use',{href:`icons.svg#${name}`})]);
 const art=(name,className='',eager=false)=>el('img',{
   src:`assets/${name}-3d.webp`,alt:'','aria-hidden':'true',class:`art3d ${className}`.trim(),
-  width:'640',height:'640',loading:eager?'eager':'lazy',decoding:'async',draggable:'false'
+  width:'640',height:'640',loading:eager?'eager':'lazy',decoding:'async',draggable:'false',
+  style:`--float-delay:-${name.length%5+1}s;--float-duration:${6+name.length%4}.8s`
 });
 function decorate3d(holder,name){
   if(!holder)return;
@@ -90,7 +91,7 @@ for(const page of pages){
   const overlays=walk(body).filter(n=>['modal','patients-modal','analyzing-overlay','toast'].some(c=>cls(n,c)));
   overlays.forEach(n=>detach(body,n));
   head.children=head.children.filter(n=>n.tag==='meta'||n.tag==='title');
-  head.children.push(el('meta',{name:'theme-color',content:'#087568'}),el('link',{rel:'icon',type:'image/svg+xml',href:'brand.svg'}),el('link',{rel:'stylesheet',href:'design.css?v=20260905'}),el('link',{rel:'stylesheet',href:'modern.css?v=20260905-3d1'}),el('script',{src:'runtime.js?v=20260905',defer:''}),el('script',{src:'motion.js?v=20260905-3d1',defer:''}));
+  head.children.push(el('meta',{name:'theme-color',content:'#087568'}),el('link',{rel:'icon',type:'image/svg+xml',href:'brand.svg'}),el('link',{rel:'stylesheet',href:'design.css?v=20260905'}),el('link',{rel:'stylesheet',href:'modern.css?v=20260905-3d2'}),el('script',{src:'runtime.js?v=20260905',defer:''}),el('script',{src:'motion.js?v=20260905-3d2',defer:''}));
   if(page==='login'||page==='register')head.children.push(el('script',{src:'auth.js',defer:''}));
   head.children.push(el('script',{src:`pages/${page}.js?v=20260905`,defer:''}));
   body.attrs={'class': ['index','login','register','pricing'].includes(page)?`public-site page-${page}`:`workspace-site page-${page}`,'data-page':page};
@@ -99,6 +100,7 @@ for(const page of pages){
   const navLinks=find(nav,'nav-links');
   const destinations=['index.html','index.html#workflow','index.html#workflow','pricing.html'];
   navLinks.children.filter(n=>n.tag==='a').forEach((a,i)=>a.attrs.href=destinations[i]);
+  navLinks.children.filter(n=>n.tag==='a').forEach(a=>{if(a.attrs.href===`${page}.html`)a.attrs['aria-current']='page';});
   for(const n of walk(doc)){
     if(n.tag==='img'&&n.attrs.src?.includes('logo-')){n.attrs.src='brand.svg';n.attrs.width='42';n.attrs.height='42';}
     if(n.tag==='a'&&n.attrs.href==='#'){
@@ -130,8 +132,8 @@ for(const page of pages){
     const visual=el('div',{class:'hero-visual','aria-hidden':'true'},[
       el('div',{class:'hero-art-scene'},[
         el('div',{class:'hero-art-main'},[mainArt]),
-        el('div',{class:'hero-art-satellite satellite-clipboard'},[art('clipboard','',true)]),
-        el('div',{class:'hero-art-satellite satellite-chart'},[art('chart','',true)])
+        el('div',{class:'hero-art-satellite satellite-clipboard'},[art('shield','',true)]),
+        el('div',{class:'hero-art-satellite satellite-chart'},[art('heart','',true)])
       ])
     ]);
     const newHero=el('section',{class:'hero-opening',id:'intro'},[copy,visual,trust]);
@@ -139,9 +141,9 @@ for(const page of pages){
     const faqSection=el('section',{class:'questions-section',id:'questions'},[faq,psych]);
     find(copy,'badge').attrs.class='badge';
     const secondary=find(copy,'btn-outline');secondary.attrs['data-scroll']='workflow';
-    for(const q of walk(faq).filter(n=>cls(n,'mini-q'))){
+    for(const [i,q] of walk(faq).filter(n=>cls(n,'mini-q')).entries()){
       const small=q.children.find(n=>n.tag==='small');detach(q,small);
-      q.tag='details';q.attrs.open='';q.children=[el('summary',{},q.children),small];
+      q.tag='details';if(i===0)q.attrs.open='';q.children=[el('summary',{},q.children),small];
     }
     body.children=[nav,el('main',{},[newHero,process,faqSection,cta]),footer];
   }else if(page==='login'||page==='register'){
@@ -211,12 +213,16 @@ for(const page of pages){
   for(const n of walk(body).filter(n=>['pmClose','mClose'].includes(n.attrs?.id)))n.attrs['aria-label']='إغلاق';
   for(const n of walk(body).filter(n=>['symptoms','notesArea'].includes(n.attrs?.id)))n.attrs['aria-label']=n.attrs.placeholder;
   convertIcons(body);
-  if(page==='index')walk(body).filter(n=>cls(n,'step')).forEach((step,i)=>decorate3d(find(step,'ico'),['clipboard','brain','brain','clipboard','chart','clipboard'][i]));
-  if(page==='login'||page==='register')decorate3d(find(body,'auth-ico'),page==='login'?'brain':'clipboard');
-  if(page==='pricing')walk(body).filter(n=>cls(n,'p-icon')).forEach((holder,i)=>decorate3d(holder,['clipboard','brain','chart'][i%3]));
-  if(page==='diagnosis')walk(body).filter(n=>cls(n,'s-icon')).forEach((holder,i)=>decorate3d(holder,['brain','clipboard','chart'][i%3]));
+  if(page==='index')walk(body).filter(n=>cls(n,'step')).forEach((step,i)=>{
+    decorate3d(find(step,'ico'),['speech','stethoscope','compare','clipboard','chart','folder'][i]);
+    step.tag='a';step.attrs.href=['diagnosis.html','diagnosis.html','results.html','test.html','charts.html','patient.html'][i];
+    const arrow=icon('arrow-left');addClass(arrow,'step-link-icon');step.children.push(arrow);
+  });
+  if(page==='login'||page==='register')decorate3d(find(body,'auth-ico'),page==='login'?'key':'account');
+  if(page==='pricing')walk(body).filter(n=>cls(n,'p-icon')).forEach((holder,i)=>decorate3d(holder,['seedling','microscope','clinic'][i]));
   if(page==='test')decorate3d(find(body,'t-icon'),'clipboard');
-  if(page==='charts')walk(body).filter(n=>cls(n,'sc-ico')).forEach((holder,i)=>decorate3d(holder,['clipboard','chart','brain'][i%3]));
+  // One global, keyboard-accessible pause control for the requested looping art.
+  body.children.push(el('button',{id:'motionToggle',class:'motion-toggle',type:'button','aria-label':'إيقاف الحركة','aria-pressed':'false',title:'إيقاف الحركة'},[icon('pause'),icon('play')]));
   const resultWords=contentWords(body);
   if(JSON.stringify(originalWords)!==JSON.stringify(resultWords)) {
     const counts=a=>a.reduce((m,x)=>(m[x]=(m[x]||0)+1,m),{});const a=counts(originalWords),b=counts(resultWords);
@@ -244,10 +250,11 @@ for(const page of pages){
     clientCode=clientCode.replaceAll('stop-color="#2563eb"','stop-color="#087568"');
   }
   fs.writeFileSync(path.join(out,'pages',`${page}.js`),clientCode);
-  fs.writeFileSync(path.join(out,`${page}.html`),'<!doctype html>\n'+serialize(doc).replace(/^\uFEFF/,''));
+  fs.writeFileSync(path.join(out,`${page}.html`),'<!doctype html>\n'+serialize(doc).replace(/^\uFEFF/,'').replace(/\r\n/g,'\n').replace(/^[ \t]+$/gm,''));
 }
 let icons=fs.readFileSync(path.join(root,'public','ui-icons.svg'),'utf8');
 icons=icons.replace('</defs>','<symbol id="plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol></defs>');
+icons=icons.replace('</defs>','<symbol id="arrow-left" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol><symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="3"/></symbol><symbol id="play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol></defs>');
 fs.writeFileSync(path.join(out,'icons.svg'),icons);
 fs.copyFileSync(path.join(root,'public','psychologist.svg'),path.join(out,'psychologist.svg'));
 fs.writeFileSync(path.join(out,'.nojekyll'),'');

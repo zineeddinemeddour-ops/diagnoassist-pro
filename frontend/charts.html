@@ -1,7 +1,7 @@
 <!doctype html>
 
 <html lang="ar" dir="rtl">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>الرسوم البيانية | DIAGNO-ASSIST</title><meta name="theme-color" content="#087568"><link rel="icon" type="image/svg+xml" href="brand.svg"><link rel="stylesheet" href="design.css?v=20260905"><link rel="stylesheet" href="modern.css?v=20260905-3d1"><script src="runtime.js?v=20260905" defer=""></script><script src="motion.js?v=20260905-3d1" defer=""></script><script src="pages/charts.js?v=20260905" defer=""></script></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>الرسوم البيانية | DIAGNO-ASSIST</title><meta name="theme-color" content="#087568"><link rel="icon" type="image/svg+xml" href="brand.svg"><link rel="stylesheet" href="design.css?v=20260905"><link rel="stylesheet" href="modern.css?v=20260905-3d2"><script src="runtime.js?v=20260905" defer=""></script><script src="motion.js?v=20260905-3d2" defer=""></script><script src="pages/charts.js?v=20260905" defer=""></script></head>
 <body class="workspace-site page-charts" data-page="charts"><aside class="site-navigation">
         <a class="nav-brand" href="index.html">
             <img src="brand.svg" alt="DIAGNO-ASSIST">
@@ -16,20 +16,20 @@
             <a href="index.html#workflow"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#stethoscope"></use></svg></span> المميزات</a>
             <a href="pricing.html"><span class="ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#coins"></use></svg></span> الأسعار</a>
         </div>
-        
+
     <div class="workflow-navigation">
         <a href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#home"></use></svg>الرئيسية</a>
-        
+
         <a href="patient.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#users"></use></svg>ملف المريض</a>
-        
+
         <a href="test.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#flask"></use></svg>الاختبار</a>
-        
+
         <a href="charts.html" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#chart"></use></svg>الرسوم البيانية</a>
     </div></aside><div class="workspace-stage"><header class="workspace-toolbar"><h1>لوحة <span class="grad">الرسوم البيانية</span></h1><div class="nav-actions">
             <button class="btn-purple" type="button">تسجيل الدخول</button>
         </div></header><main class="workspace-content"><div class="chart-wrap">
         <div class="chart-title">
-            
+
             <p>نتائج جلسات الاختبار — تتحدّث تلقائيًا مع كل جلسة جديدة</p>
         </div>
 
@@ -47,24 +47,24 @@
 
         <div class="sum-cards">
             <div class="sum-card">
-                <div class="sc-ico icon-stage"><img src="assets/clipboard-3d.webp" alt="" aria-hidden="true" class="art3d" width="640" height="640" loading="lazy" decoding="async" draggable="false"></div>
+                <div class="sc-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#calendar"></use></svg></div>
                 <div><b id="sumCount">0</b><small>الجلسات المخزنة في الملف</small></div>
             </div>
             <div class="sum-card">
-                <div class="sc-ico icon-stage"><img src="assets/chart-3d.webp" alt="" aria-hidden="true" class="art3d" width="640" height="640" loading="lazy" decoding="async" draggable="false"></div>
+                <div class="sc-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#trend"></use></svg></div>
                 <div><b id="sumLast">—</b><small>نتيجة الجلسة الأخيرة <span id="sumLastMax">(من 376)</span></small></div>
             </div>
             <div class="sum-card">
-                <div class="sc-ico icon-stage"><img src="assets/brain-3d.webp" alt="" aria-hidden="true" class="art3d" width="640" height="640" loading="lazy" decoding="async" draggable="false"></div>
+                <div class="sc-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#target"></use></svg></div>
                 <div><b id="sumAvg">—</b><small>متوسط نتائج جميع الجلسات</small></div>
             </div>
         </div>
 
-        
 
-        
 
-        
+
+
+
 
         <div class="empty-box" id="emptyBox" style="display:none">
             <span class="big-ico"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#inbox"></use></svg></span>
@@ -159,5 +159,5 @@
             </div>
             <div class="modal-body" id="mBody"></div>
         </div>
-    </div></body>
+    </div><button id="motionToggle" class="motion-toggle" type="button" aria-label="إيقاف الحركة" aria-pressed="false" title="إيقاف الحركة"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#pause"></use></svg><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="icons.svg#play"></use></svg></button></body>
 </html>
