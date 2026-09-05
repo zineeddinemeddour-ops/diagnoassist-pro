@@ -8,7 +8,7 @@ import { parse } from './rebuild-frontend.mjs';
 const root=path.resolve(import.meta.dirname,'..','frontend');
 const walk=n=>[n,...(n.children||[]).flatMap(walk)];
 const htmlFiles=fs.readdirSync(root).filter(f=>f.endsWith('.html'));
-const scripts=['runtime.js','auth.js',...fs.readdirSync(path.join(root,'pages')).map(f=>'pages/'+f)];
+const scripts=['runtime.js','auth.js','motion.js',...fs.readdirSync(path.join(root,'pages')).map(f=>'pages/'+f)];
 let references=0,handlers=0;
 for(const file of htmlFiles){
   const nodes=walk(parse(fs.readFileSync(path.join(root,file),'utf8')));

@@ -19,6 +19,12 @@ the original demonstration state and does not charge a card or send a receipt.
 ## Files
 
 - `design.css`: independent emerald-and-white responsive design system.
+- `modern.css`, `motion.js`: dimensional surfaces, scroll entrances, pointer
+  interaction and reduced-motion support, with no extra libraries.
+- `assets/*-3d.webp`: three optimized, transparent 3D images generated using the
+  built-in image-generation tool: brain, clinical checklist and growth chart.
+  Exact prompts are recorded in `assets/artwork-prompts.json`. The 1254-pixel
+  PNG originals were resized to 640-pixel WebP assets with their alpha preserved.
 - `brand.svg`, `icons.svg`: vector identity and consistent line icons.
 - `runtime.js`: browser-local state and accessible interactions.
 - `auth.js`: browser-local account demonstration.
@@ -39,6 +45,12 @@ No package installation is needed for this frontend. Use an ordinary static
 HTTP server for local viewing. GitHub Actions rebuilds, checks and deploys only
 this directory. The separate historical Sites/server sources are not included
 in the Pages artifact.
+
+Decorative floating motion stops after one short cycle. Scroll animations run
+once per section; pointer tilt is enabled only with a fine pointer. All animated
+effects respect the operating system's reduced-motion setting. Content remains
+visible if JavaScript or IntersectionObserver is unavailable, and print output
+does not depend on scroll position.
 
 Existing `#` placeholder legal/help links are retained because the original
 site did not contain destination pages; no policy content has been invented.

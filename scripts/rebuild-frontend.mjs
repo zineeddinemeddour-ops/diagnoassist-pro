@@ -52,6 +52,17 @@ const iconMap = {
 };
 const pattern=new RegExp('('+Object.keys(iconMap).sort((a,b)=>b.length-a.length).join('|')+')(?:\\uFE0F)?','g');
 const icon=name=>el('svg',{class:'icon',viewBox:'0 0 24 24','aria-hidden':'true',focusable:'false'},[el('use',{href:`icons.svg#${name}`})]);
+const art=(name,className='',eager=false)=>el('img',{
+  src:`assets/${name}-3d.webp`,alt:'','aria-hidden':'true',class:`art3d ${className}`.trim(),
+  width:'640',height:'640',loading:eager?'eager':'lazy',decoding:'async',draggable:'false'
+});
+function decorate3d(holder,name){
+  if(!holder)return;
+  addClass(holder,'icon-stage');
+  // Replace decorative glyphs while retaining the original step numbers.
+  holder.children=holder.children.filter(n=>n.tag!=='svg');
+  holder.children.push(art(name));
+}
 function convertIcons(n){
   if(!n.children||['script','style','textarea','svg'].includes(n.tag))return;
   n.children=n.children.flatMap(x=>{
@@ -79,7 +90,7 @@ for(const page of pages){
   const overlays=walk(body).filter(n=>['modal','patients-modal','analyzing-overlay','toast'].some(c=>cls(n,c)));
   overlays.forEach(n=>detach(body,n));
   head.children=head.children.filter(n=>n.tag==='meta'||n.tag==='title');
-  head.children.push(el('link',{rel:'icon',type:'image/svg+xml',href:'brand.svg'}),el('link',{rel:'stylesheet',href:'design.css?v=20260905'}),el('script',{src:'runtime.js?v=20260905',defer:''}));
+  head.children.push(el('meta',{name:'theme-color',content:'#087568'}),el('link',{rel:'icon',type:'image/svg+xml',href:'brand.svg'}),el('link',{rel:'stylesheet',href:'design.css?v=20260905'}),el('link',{rel:'stylesheet',href:'modern.css?v=20260905-3d1'}),el('script',{src:'runtime.js?v=20260905',defer:''}),el('script',{src:'motion.js?v=20260905-3d1',defer:''}));
   if(page==='login'||page==='register')head.children.push(el('script',{src:'auth.js',defer:''}));
   head.children.push(el('script',{src:`pages/${page}.js?v=20260905`,defer:''}));
   body.attrs={'class': ['index','login','register','pricing'].includes(page)?`public-site page-${page}`:`workspace-site page-${page}`,'data-page':page};
@@ -114,9 +125,16 @@ for(const page of pages){
     const copy=hero.children.find(n=>n.tag==='div'&&!cls(n,'hero-side'));addClass(copy,'hero-copy');
     const trust=extract(copy,'hero-trust'),faq=extract(hero,'app-card'),psych=extract(hero,'hero-psych');
     const stepsTitle=extract(steps,'steps-title');const workflow=extract(steps,'steps-grid');
-    // A centered editorial opening; the original workflow becomes a full-width
-    // product rail. The FAQ moves to its own proper section below the workflow.
-    const newHero=el('section',{class:'hero-opening',id:'intro'},[copy,trust]);
+    // Existing text and controls beside the requested dimensional artwork.
+    const mainArt=art('brain','hero-brain',true);mainArt.attrs.fetchpriority='high';
+    const visual=el('div',{class:'hero-visual','aria-hidden':'true'},[
+      el('div',{class:'hero-art-scene'},[
+        el('div',{class:'hero-art-main'},[mainArt]),
+        el('div',{class:'hero-art-satellite satellite-clipboard'},[art('clipboard','',true)]),
+        el('div',{class:'hero-art-satellite satellite-chart'},[art('chart','',true)])
+      ])
+    ]);
+    const newHero=el('section',{class:'hero-opening',id:'intro'},[copy,visual,trust]);
     const process=el('section',{class:'process-section',id:'workflow'},[stepsTitle,workflow]);
     const faqSection=el('section',{class:'questions-section',id:'questions'},[faq,psych]);
     find(copy,'badge').attrs.class='badge';
@@ -193,6 +211,12 @@ for(const page of pages){
   for(const n of walk(body).filter(n=>['pmClose','mClose'].includes(n.attrs?.id)))n.attrs['aria-label']='إغلاق';
   for(const n of walk(body).filter(n=>['symptoms','notesArea'].includes(n.attrs?.id)))n.attrs['aria-label']=n.attrs.placeholder;
   convertIcons(body);
+  if(page==='index')walk(body).filter(n=>cls(n,'step')).forEach((step,i)=>decorate3d(find(step,'ico'),['clipboard','brain','brain','clipboard','chart','clipboard'][i]));
+  if(page==='login'||page==='register')decorate3d(find(body,'auth-ico'),page==='login'?'brain':'clipboard');
+  if(page==='pricing')walk(body).filter(n=>cls(n,'p-icon')).forEach((holder,i)=>decorate3d(holder,['clipboard','brain','chart'][i%3]));
+  if(page==='diagnosis')walk(body).filter(n=>cls(n,'s-icon')).forEach((holder,i)=>decorate3d(holder,['brain','clipboard','chart'][i%3]));
+  if(page==='test')decorate3d(find(body,'t-icon'),'clipboard');
+  if(page==='charts')walk(body).filter(n=>cls(n,'sc-ico')).forEach((holder,i)=>decorate3d(holder,['clipboard','chart','brain'][i%3]));
   const resultWords=contentWords(body);
   if(JSON.stringify(originalWords)!==JSON.stringify(resultWords)) {
     const counts=a=>a.reduce((m,x)=>(m[x]=(m[x]||0)+1,m),{});const a=counts(originalWords),b=counts(resultWords);
